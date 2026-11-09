@@ -1,0 +1,50 @@
+import { useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { DestinationCard } from "@/components/atlas";
+import { LoadingRows, PageHeader } from "@/components/status-badge";
+import { destinationsQuery, TYPE_LABEL } from "@/lib/queries";
+import { Input } from "@/components/ui/input";
+
+export const Route = createFileRoute("/destinations/")({
+  head: () => ({
+    meta: [
+      { title: "Destinations | Markhor Albion" },
+      { name: "description", content: "Every destination in the Markhor Albion atlas, from sovereign countries to territories and special regions." },
+      { property: "og:title", content: "Destinations | Markhor Albion" },
+      { property: "og:description", content: "Browse every tracked destination and its visit status." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  component: Destinations,
+});
+
+function Destinations() {
+  const { data = [], isLoading } = useQuery(destinationsQuery);
+  const [q, setQ] = useState("");
+  const [type, setType] = useState("all");
+  const list = data.filter((d) => (type === "all" || d.type === type) && d.name.toLowerCase().includes(q.toLowerCase()));
+  return (
+    <>
+      <PageHeader eyebrow="Destinations" title="Countries, regions and the places in between." />
+      <section className="container-page py-12">
+        <div className="mb-8 flex flex-wrap gap-3">
+          <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search…" className="max-w-xs rounded-none" aria-label="Search destinations" />
+          <div className="flex flex-wrap gap-2">
+            {["all", ...Object.keys(TYPE_LABEL)].map((t) => (
+              <button key={t} onClick={() => setType(t)} className={`border px-3 py-2 text-xs ${type === t ? "border-primary bg-primary/15 text-ice" : "border-border text-muted-foreground hover:text-foreground"}`}>
+                {t === "all" ? "All" : TYPE_LABEL[t]}
+              </button>
+            ))}
+          </div>
+        </div>
+        {isLoading ? <LoadingRows /> : (
+          <div className="grid grid-cols-1 gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
+            {list.map((d) => <DestinationCard key={d.id} d={d} />)}
+          </div>
+        )}
+      </section>
+    </>
+  );
+}

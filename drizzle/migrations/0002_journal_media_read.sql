@@ -1,0 +1,1 @@
+CREATE POLICY "Anyone reads journal media" ON storage.objects FOR SELECT TO anon, authenticated USING (bucket_id = 'journal-media');
