@@ -1,29 +1,23 @@
-# Welcome to your Lovable project
+# Markhor Albion
 
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+Premium travel journal and destination guide.
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Requires Bun and Node.js.
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+bun install
+bun run dev
 ```
 
-## Built with
+## Build and deploy
 
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+Cloudflare Workers Builds is connected to the `main` branch.
+
+```sh
+bun run build
+npx wrangler deploy
+```
+
+Push commits to `main` to trigger a production build and deployment.
