@@ -114,12 +114,12 @@ export const STATUS_LABEL: Record<string, string> = {
 };
 
 export const TYPE_LABEL: Record<string, string> = {
-  sovereign: "Sovereign country",
-  constituent: "Constituent country",
-  territory: "Territory / dependency",
-  sar: "Special administrative region",
-  disputed: "Disputed / partially recognised",
-  other: "Other destination",
+  sovereign: "Country",
+  constituent: "Country",
+  territory: "Country",
+  sar: "Country",
+  disputed: "Country",
+  other: "Country",
 };
 
 export type MediaItem = Database["public"]["Tables"]["media_items"]["Row"];
