@@ -37,12 +37,24 @@ function AuthPage() {
         if (error) throw error;
         navigate({ to: "/admin" });
       } else {
-        const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin + "/admin" } });
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { emailRedirectTo: window.location.origin + "/admin" },
+        });
         if (error) throw error;
-        if (!data.session) {
-          const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-          if (signInError) throw signInError;
+
+        if (data.user && data.user.identities?.length === 0) {
+          toast.error("An account may already exist with this email. Switch to Sign in or use Google.");
+          return;
         }
+
+        if (!data.session) {
+          toast.success("Account request received. Check your email for a confirmation link, then sign in.");
+          setMode("in");
+          return;
+        }
+
         toast.success("Account created.");
         navigate({ to: "/admin" });
       }
