@@ -15,7 +15,6 @@ export const NAV = [
   { to: "/my-world", label: "Map" },
   { to: "/passport", label: "Travel Timeline" },
   { to: "/journal", label: "Diaries" },
-  { to: "/destinations", label: "Guides" },
   { to: "/next-adventure", label: "Next Adventure" },
   { to: "/wonders", label: "Wonders" },
   { to: "/unesco", label: "UNESCO" },
@@ -30,7 +29,6 @@ const HEADER = [
   { to: "/my-world", label: "Map", exact: false },
   { to: "/passport", label: "Travel Timeline", exact: false },
   { to: "/journal", label: "Diaries", exact: false },
-  { to: "/destinations", label: "Guides", exact: false },
 ] as const;
 
 function linkCls(active: boolean) {
@@ -55,7 +53,7 @@ function SiteSearch({ open, setOpen }: { open: boolean; setOpen: (v: boolean) =>
   }, [open, setOpen]);
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput placeholder="Search places, guides, stories…" />
+      <CommandInput placeholder="Search places and stories…" />
       <CommandList>
         <CommandEmpty>No results.</CommandEmpty>
         <CommandGroup heading="Pages">
@@ -173,7 +171,7 @@ export function SiteHeader() {
             className="mr-2 hidden items-center gap-2 rounded-full border border-border bg-card/70 px-4 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary/60 hover:text-foreground lg:flex"
           >
             <Search className="h-3.5 w-3.5" />
-            <span>Search places, guides, stories…</span>
+            <span>Search places and stories…</span>
           </button>
           <button onClick={() => setSearchOpen(true)} aria-label="Search" className="p-2 text-muted-foreground hover:text-foreground lg:hidden">
             <Search className="h-4 w-4" />
