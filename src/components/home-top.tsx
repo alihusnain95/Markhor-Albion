@@ -1,9 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Images, Plane, Search, Compass } from "lucide-react";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { WorldMap, type MapArc, type MapPin } from "@/components/world-map";
 import { useTravelStats } from "@/components/atlas";
 import { DESTINATION_IMAGES, DESTINATION_TAGLINES, HOME_HERO_IMAGE, TILE_IMAGES } from "@/lib/images";
+import { articlesQuery, mediaQuery } from "@/lib/queries";
 import type { DestinationWithVisit, PlannedTrip } from "@/lib/queries";
 
 /** The owner's curated front-page row — planned and visited places, not a claim about which have been seen. */
@@ -31,7 +33,11 @@ function Panel({ className = "", children }: { className?: string; children: Rea
 }
 
 export function HomeTop({ dests, plans }: { dests: DestinationWithVisit[]; plans: PlannedTrip[] }) {
-  const { stats } = useTravelStats();
+  const { stats, unescoVisited, wondersCompleted } = useTravelStats();
+  const articles = useQuery(articlesQuery).data ?? [];
+  const media = useQuery(mediaQuery).data ?? [];
+  const recentStories = articles.slice(0, 3);
+  const gallery = media.filter((m) => m.kind === "photo").slice(0, 6);
   const [q, setQ] = useState("");
   const byId = (id: string | null) => dests.find((d) => d.id === id) ?? null;
   const ordered = plans.filter((p) => p.intended_start).sort((a, b) => (a.intended_start! < b.intended_start! ? -1 : 1));
@@ -95,14 +101,30 @@ export function HomeTop({ dests, plans }: { dests: DestinationWithVisit[]; plans
             </Link>
           )}
           <p className="mb-5 flex items-center gap-3 text-[0.62rem] font-semibold uppercase tracking-[0.48em] text-sky-200/90"><span className="h-px w-10 bg-sky-300/80" /> A WORLD OF STORIES</p>
-          <h1 className="max-w-4xl font-serif text-5xl font-normal uppercase leading-[0.98] tracking-[-0.035em] text-white drop-shadow-[0_8px_32px_rgba(0,0,0,0.5)] md:text-7xl lg:text-[6.5rem]">
-            The world<br /><span className="text-primary">is bigger than</span><br />the life we know
+          <h1 className="max-w-4xl font-serif text-5xl font-medium tracking-[0.02em] text-white drop-shadow-[0_8px_32px_rgba(0,0,0,0.5)] md:text-7xl lg:text-[6.5rem]">
+            MARKHOR <span className="block text-sky-200">ALBION</span>
           </h1>
-          <p className="mt-7 text-[0.65rem] font-medium uppercase tracking-[0.42em] text-sky-100/80">Different places · Different people · A deeper you</p>
-          <blockquote className="mt-7 max-w-md border-l border-sky-300/80 pl-5 font-serif text-xl italic leading-relaxed text-white/90">
-            "Travel isn't just about seeing places, it's about understanding life."
-          </blockquote>
+          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.42em] text-white/90">Beyond Borders. Beyond the Ordinary.</p>
+          <p className="mt-7 max-w-xl text-base leading-8 text-slate-100/85 md:text-lg">Every country tells a story. Every journey changes the perspective. Follow my journey across borders, cultures, landscapes and extraordinary places around the world.</p>
+          <div className="mt-9 flex flex-wrap gap-3">
+            <Link to="/my-world" className="inline-flex items-center gap-3 rounded-full border border-sky-300 bg-sky-300 px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-[#061326] transition-all hover:-translate-y-0.5 hover:bg-white">Explore My World <ArrowRight className="h-4 w-4" /></Link>
+            <Link to="/journal" className="inline-flex items-center gap-3 rounded-full border border-white/45 bg-white/5 px-6 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-white backdrop-blur transition-all hover:-translate-y-0.5 hover:border-sky-200 hover:bg-white/10">Read My Travel Journal</Link>
+          </div>
         </div>
+      </section>
+
+      {/* Live travel statistics */}
+      <section className="container-page relative z-10 -mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 backdrop-blur-xl sm:grid-cols-3 lg:grid-cols-5">
+        {[
+          { label: "Countries & destinations", value: stats ? stats.countriesVisited : "Not yet recorded" },
+          { label: "Continents explored", value: stats ? stats.continents.length : "Not yet recorded" },
+          { label: "World wonders", value: wondersCompleted ?? "Not yet recorded" },
+          { label: "UNESCO sites visited", value: unescoVisited ?? "Not yet recorded" },
+          { label: "Places to discover", value: stats ? "∞" : "Not yet recorded" },
+        ].map((item) => <div key={item.label} className="bg-[#081a33]/95 px-5 py-6">
+          <p className="font-serif text-3xl text-white md:text-4xl">{item.value}</p>
+          <p className="mt-2 text-[0.6rem] uppercase tracking-[0.18em] text-slate-400">{item.label}</p>
+        </div>)}
       </section>
 
       {/* Four tiles */}
@@ -190,6 +212,34 @@ export function HomeTop({ dests, plans }: { dests: DestinationWithVisit[]; plans
         </Panel>
       </section>
 
+      {/* Recent stories */}
+      <section className="container-page mt-16 pb-4">
+        <div className="mb-6 flex items-end justify-between gap-4">
+          <div><p className="eyebrow">From the journal</p><h2 className="mt-2 font-serif text-3xl md:text-4xl">Recent stories</h2></div>
+          <Link to="/journal" className="text-xs uppercase tracking-widest text-ice hover:text-white">Read the journal →</Link>
+        </div>
+        {recentStories.length ? <div className="grid gap-4 md:grid-cols-3">
+          {recentStories.map((a) => <Link key={a.id} to="/journal/$slug" params={{slug:a.slug}} className="group overflow-hidden rounded-xl border border-border bg-card">
+            {a.cover_url ? <img src={a.cover_url} alt="" loading="lazy" className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"/> : <div className="aspect-[16/10] bg-secondary"/>}
+            <div className="p-5"><p className="font-serif text-xl group-hover:text-ice">{a.title}</p>{a.intro && <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{a.intro}</p>}</div>
+          </Link>)}
+        </div> : <p className="rounded-xl border border-border bg-card p-6 text-sm text-muted-foreground">Travel stories will appear here when published.</p>}
+      </section>
+
+      {/* Curated photo gallery */}
+      <section className="container-page mt-14 pb-16">
+        <div className="mb-6 flex items-end justify-between gap-4">
+          <div><p className="eyebrow">Visual diary</p><h2 className="mt-2 font-serif text-3xl md:text-4xl">Moments from the journey</h2></div>
+          <Link to="/gallery" className="text-xs uppercase tracking-widest text-ice hover:text-white">Open gallery →</Link>
+        </div>
+        {gallery.length ? <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
+          {gallery.map((m) => <Link key={m.id} to="/gallery" className="group relative aspect-[4/3] overflow-hidden rounded-lg bg-card">
+            <img src={m.url} alt={m.alt_text ?? m.caption ?? "Travel photograph"} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"/>
+            <span className="absolute inset-0 bg-gradient-to-t from-[#061326]/70 to-transparent opacity-70"/>
+            {m.caption && <span className="absolute bottom-3 left-3 right-3 text-sm text-white">{m.caption}</span>}
+          </Link>)}
+        </div> : <p className="rounded-xl border border-border bg-card p-6 text-sm text-muted-foreground">Your travel photographs will appear here as they are added to the gallery.</p>}
+      </section>
       {/* Featured destinations */}
       <section className="container-page mt-3 pb-6">
         <Panel className="p-4">
