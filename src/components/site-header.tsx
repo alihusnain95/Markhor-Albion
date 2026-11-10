@@ -13,7 +13,7 @@ import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, C
 export const NAV = [
   { to: "/", label: "Home" },
   { to: "/my-world", label: "Map" },
-  { to: "/passport", label: "Trips" },
+  { to: "/passport", label: "Travel Timeline" },
   { to: "/journal", label: "Diaries" },
   { to: "/destinations", label: "Guides" },
   { to: "/next-adventure", label: "Next Adventure" },
@@ -28,7 +28,7 @@ const REFLECTIONS = "Personal reflections";
 const HEADER = [
   { to: "/", label: "Home", exact: true },
   { to: "/my-world", label: "Map", exact: false },
-  { to: "/passport", label: "Trips", exact: false },
+  { to: "/passport", label: "Travel Timeline", exact: false },
   { to: "/journal", label: "Diaries", exact: false },
   { to: "/destinations", label: "Guides", exact: false },
 ] as const;
