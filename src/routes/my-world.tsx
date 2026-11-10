@@ -25,7 +25,6 @@ function MyWorld() {
   const { data: dests = [], isLoading, error } = useQuery(destinationsQuery);
   const navigate = useNavigate();
   const [q, setQ] = useState("");
-  const [focus, setFocus] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "visited" | "planned" | "not_visited">("all");
 
   const matches = useMemo(
@@ -74,8 +73,8 @@ function MyWorld() {
         </div>
         {error && <p className="mt-3 text-sm text-destructive">The atlas data could not be loaded: {error.message}</p>}
         <div className="relative mt-4 overflow-hidden rounded-xl border border-border">
-          <WorldMap destinations={shown} onSelect={(s) => { if (s.destination) navigate({ to: "/destinations/$slug", params: { slug: s.destination.slug } }); }} focusKey={focus} className="aspect-[4/3] w-full sm:aspect-[2/1]" />
-          {!selection && isLoading && <p className="absolute left-4 top-4 text-xs text-muted-foreground">Loading destinations…</p>}
+          <WorldMap destinations={shown} onSelect={(s) => { if (s.destination) navigate({ to: "/destinations/$slug", params: { slug: s.destination.slug } }); }} className="aspect-[4/3] w-full sm:aspect-[2/1]" />
+          {isLoading && <p className="absolute left-4 top-4 text-xs text-muted-foreground">Loading destinations…</p>}
         </div>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card px-4 py-3">
           <MapLegend />
