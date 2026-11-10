@@ -15,7 +15,6 @@ export const NAV = [
   { to: "/my-world", label: "Map" },
   { to: "/passport", label: "Trips" },
   { to: "/journal", label: "Diaries" },
-  { to: "/gallery", label: "Gallery" },
   { to: "/destinations", label: "Guides" },
   { to: "/next-adventure", label: "Next Adventure" },
   { to: "/wonders", label: "Wonders" },
@@ -31,7 +30,6 @@ const HEADER = [
   { to: "/my-world", label: "Map", exact: false },
   { to: "/passport", label: "Trips", exact: false },
   { to: "/journal", label: "Diaries", exact: false },
-  { to: "/gallery", label: "Gallery", exact: false },
   { to: "/destinations", label: "Guides", exact: false },
 ] as const;
 
