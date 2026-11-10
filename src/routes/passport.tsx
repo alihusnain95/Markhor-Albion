@@ -89,17 +89,15 @@ function Passport() {
                     const image = lead ? DESTINATION_IMAGES[lead.slug] : undefined;
                     const placeNames = trip.cities.length ? trip.cities.join(" · ") : places.map((d) => d.name).join(" · ");
                     return (
-                      <article key={trip.id} className="group overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-primary/60">
-                        <div className="relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-secondary to-background">
-                          {image && <img src={image} alt={lead?.name ?? trip.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />}
-                          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
-                          <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between gap-3">
-                            <p className="font-serif text-xl text-white drop-shadow-md">{trip.title}</p>
-                            <span className="shrink-0 rounded-full border border-white/25 bg-background/70 px-2.5 py-1 text-[0.65rem] text-white backdrop-blur">{dateRange(trip.start_date, trip.end_date)}</span>
-                          </div>
+                      <article key={trip.id} className="overflow-hidden rounded-lg border border-border bg-card transition-colors hover:border-primary/60">
+                        <div className="relative aspect-[16/9] bg-gradient-to-br from-secondary to-background">
+                          {image && <img src={image} alt={lead?.name ?? trip.title} loading="lazy" className="h-full w-full object-cover" />}
                         </div>
                         <div className="p-4">
-                          <div className="flex flex-wrap items-center gap-2">
+                          <p className="font-semibold">{trip.title}</p>
+                          <p className="mt-0.5 text-xs text-muted-foreground">{dateRange(trip.start_date, trip.end_date)}</p>
+                          <span className="mt-3 inline-block rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 text-[0.68rem] font-semibold text-primary">Visited</span>
+                          <div className="mt-3 flex flex-wrap items-center gap-2">
                             {places.map((place) => (
                               <span key={place.id} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/50 px-2 py-1 text-xs">
                                 <Flag iso2={place.iso2} slug={place.slug} emoji={place.flag} className="h-3.5 w-5 rounded-[2px]" />
