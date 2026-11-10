@@ -43,8 +43,8 @@ export function StatsGrid({ compact = false }: { compact?: boolean }) {
   const v = (n: number | undefined) => (s.loading || n === undefined ? "—" : n);
   const ic = "h-4 w-4";
   const tiles = [
-    { icon: <Globe2 className={ic} />, value: v(s.stats?.sovereign), label: "Sovereign countries", sub: "UN-style states only" },
-    { icon: <MapPin className={ic} />, value: v(s.stats?.destinationsTracked), label: "Destinations tracked", sub: `${s.stats?.constituentAndTerritories ?? "—"} regions · ${s.stats?.otherTracked ?? "—"} disputed` },
+    { icon: <Globe2 className={ic} />, value: v(s.stats?.countriesVisited), label: "Countries visited", sub: "Every separately flagged destination counts" },
+    { icon: <MapPin className={ic} />, value: v(s.stats?.destinationsTracked), label: "Places explored", sub: "Each destination counted individually" },
     { icon: <Compass className={ic} />, value: v(s.stats?.continents.length), label: "Continents explored" },
     { icon: <Plane className={ic} />, value: v(s.trips), label: "Recorded trips" },
     { icon: <Landmark className={ic} />, value: v(s.unescoVisited), label: "UNESCO sites visited", sub: `of ${s.unescoTotal} recorded` },
@@ -57,8 +57,8 @@ export function StatsGrid({ compact = false }: { compact?: boolean }) {
       </div>
       <p className="mt-3 text-[0.7rem] leading-relaxed text-muted-foreground">
         Based on recorded data. {s.stats && s.stats.unconfirmedCounts > 0 && `${s.stats.unconfirmedCounts} destinations have no confirmed visit count yet. `}Each destination is counted once.
-        {s.counting?.count_uk_via_constituents && " The UK counts once when any constituent country is visited."}
-        {s.counting && !s.counting.count_disputed_as_sovereign && " Disputed territories aren't counted as sovereign countries."}
+        Every separately flagged destination counts individually, including territories and special administrative regions.
+
       </p>
     </div>
   );
