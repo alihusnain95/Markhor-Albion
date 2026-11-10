@@ -15,6 +15,42 @@ const W = 960;
 const H = 500;
 const POINT_TYPES = new Set(["constituent", "territory", "sar", "disputed", "other"]);
 
+const COUNTRY_CODES: Record<string, string> = {
+  Afghanistan: "AF", Albania: "AL", Algeria: "DZ", Andorra: "AD", Angola: "AO", Argentina: "AR",
+  Armenia: "AM", Australia: "AU", Austria: "AT", Azerbaijan: "AZ", Bahrain: "BH", Bangladesh: "BD",
+  Belarus: "BY", Belgium: "BE", Belize: "BZ", Bhutan: "BT", Bolivia: "BO", "Bosnia and Herzegovina": "BA",
+  Botswana: "BW", Brazil: "BR", Brunei: "BN", Bulgaria: "BG", Cambodia: "KH", Cameroon: "CM",
+  Canada: "CA", Chile: "CL", China: "CN", Colombia: "CO", "Costa Rica": "CR", Croatia: "HR",
+  Cuba: "CU", Cyprus: "CY", "Northern Cyprus": "CY", "Czech Republic": "CZ", Czechia: "CZ",
+  Denmark: "DK", Djibouti: "DJ", "Dominican Republic": "DO", Ecuador: "EC", Egypt: "EG",
+  Estonia: "EE", Ethiopia: "ET", Finland: "FI", France: "FR", Georgia: "GE", Germany: "DE",
+  Ghana: "GH", Greece: "GR", Guatemala: "GT", Haiti: "HT", Honduras: "HN", "Hong Kong": "HK",
+  Hungary: "HU", Iceland: "IS", India: "IN", Indonesia: "ID", Iran: "IR", Iraq: "IQ", Ireland: "IE",
+  Israel: "IL", Italy: "IT", Jamaica: "JM", Japan: "JP", Jordan: "JO", Kazakhstan: "KZ",
+  Kenya: "KE", Kosovo: "XK", Kuwait: "KW", Kyrgyzstan: "KG", Laos: "LA", Latvia: "LV",
+  Lebanon: "LB", Libya: "LY", Liechtenstein: "LI", Lithuania: "LT", Luxembourg: "LU",
+  Macau: "MO", Madagascar: "MG", Malaysia: "MY", Maldives: "MV", Malta: "MT", Mauritius: "MU",
+  Mexico: "MX", Moldova: "MD", Monaco: "MC", Mongolia: "MN", Montenegro: "ME", Morocco: "MA",
+  Myanmar: "MM", Nepal: "NP", Netherlands: "NL", "New Zealand": "NZ", Nicaragua: "NI",
+  Nigeria: "NG", "North Korea": "KP", "North Macedonia": "MK", Norway: "NO", Oman: "OM",
+  Pakistan: "PK", Panama: "PA", Paraguay: "PY", Peru: "PE", Philippines: "PH", Poland: "PL",
+  Portugal: "PT", Qatar: "QA", Romania: "RO", Russia: "RU", Rwanda: "RW", "San Marino": "SM",
+  "Saudi Arabia": "SA", Senegal: "SN", Serbia: "RS", Singapore: "SG", Slovakia: "SK",
+  Slovenia: "SI", "South Africa": "ZA", "South Korea": "KR", Spain: "ES", "Sri Lanka": "LK",
+  Sudan: "SD", Sweden: "SE", Switzerland: "CH", Syria: "SY", Taiwan: "TW", Tajikistan: "TJ",
+  Tanzania: "TZ", Thailand: "TH", Tunisia: "TN", Turkey: "TR", Türkiye: "TR", Uganda: "UG",
+  Ukraine: "UA", "United Arab Emirates": "AE", UAE: "AE", "United Kingdom": "GB", England: "GB",
+  Scotland: "GB", Wales: "GB", "United States": "US", "United States of America": "US",
+  Uruguay: "UY", Uzbekistan: "UZ", Venezuela: "VE", Vietnam: "VN", Yemen: "YE", Zambia: "ZM",
+  Zimbabwe: "ZW", "Isle of Man": "IM", Gibraltar: "GI",
+};
+
+function flagForCountry(name: string) {
+  const code = COUNTRY_CODES[name];
+  if (!code) return "🌐";
+  return String.fromCodePoint(...[...code].map((letter) => letter.charCodeAt(0) + 127397));
+}
+
 export interface MapSelection {
   key: string;
   name: string;
@@ -287,7 +323,8 @@ export function WorldMap({
           className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full border border-border bg-popover px-2.5 py-1 text-xs font-medium text-popover-foreground shadow-lg"
           style={{ left: hover.x, top: hover.y - 10 }}
         >
-          {hover.name}
+          <span className="mr-1.5 text-sm leading-none" aria-hidden="true">{flagForCountry(hover.name)}</span>
+          <span>{hover.name}</span>
         </div>
       )}
 
