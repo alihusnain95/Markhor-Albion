@@ -32,6 +32,7 @@ function Passport() {
   const continents = [...new Set(dests.map((d) => d.continent).filter(Boolean))].sort() as string[];
   const filtered = useMemo(() => {
     const list = dests.filter(
+      (d) => d.type !== "other" &&
       (d) =>
         (continent === "all" || d.continent === continent) &&
         (status === "all" || d.status === status) &&
@@ -57,7 +58,7 @@ function Passport() {
             </Select>
             <Select label="Destination type" value={type} onChange={setType}>
               <option value="all">All types</option>
-              {Object.entries(TYPE_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              {Object.entries(TYPE_LABEL).filter(([k]) => k !== "other").map(([k, v]) => <option key={k} value={k}>{v}</option>)}
             </Select>
             <Select label="Number of visits" value={visits} onChange={setVisits}>
               <option value="all">Any visits</option><option value="multi">2+ visits</option><option value="five">5+ visits</option><option value="unconfirmed">Count unconfirmed</option>
