@@ -38,7 +38,7 @@ function MyWorld() {
     navigate({ to: "/destinations/$slug", params: { slug: d.slug } });
   };
 
-  const shown = filter === "all" ? dests : dests.filter((d) => d.status === filter);
+  const shown = (filter === "all" ? dests : dests.filter((d) => d.status === filter)).filter((d) => d.type !== "other");
 
   return (
     <>
