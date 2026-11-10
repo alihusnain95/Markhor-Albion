@@ -756,7 +756,6 @@ function SettingsAdmin() {
   const refresh = useRefresh();
   const about = useQuery(settingQuery("about"));
   const social = useQuery(settingQuery("social"));
-  const counting = useQuery(countingQuery);
   const [ab, setAb] = useState<Record<string, string>>({});
   const [so, setSo] = useState<Record<string, string>>({});
   useEffect(() => { if (about.data) setAb(about.data); }, [about.data]);
@@ -780,13 +779,7 @@ function SettingsAdmin() {
           ))}
           <button className={btn} onClick={() => saveKey("social", so)}>Save links</button>
         </div>
-        {counting.data && (
-          <div className="space-y-3">
-            <p className="font-serif text-xl">Counting methodology</p>
-            <label className="flex items-center gap-3 text-sm"><Switch checked={counting.data.count_uk_via_constituents} onCheckedChange={(v) => saveKey("counting", { ...counting.data, count_uk_via_constituents: v })} />Count a sovereign state when one of its constituent countries is visited</label>
-            <label className="flex items-center gap-3 text-sm"><Switch checked={counting.data.count_disputed_as_sovereign} onCheckedChange={(v) => saveKey("counting", { ...counting.data, count_disputed_as_sovereign: v })} />Count disputed / partially recognised territories as sovereign countries</label>
-          </div>
-        )}
+
       </div>
     </div>
   );
