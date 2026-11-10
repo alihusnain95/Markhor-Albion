@@ -99,7 +99,6 @@ function MyWorld() {
                     <Link to="/destinations/$slug" params={{ slug: d.slug }} className="flex w-full items-center justify-between gap-3 py-2.5 text-left text-sm hover:text-ice">
                       <span className="flex items-center gap-2">
                         <Flag iso2={d.iso2} slug={d.slug} emoji={d.flag} className="h-3.5 w-5 rounded-[2px]" />{d.name}
-                        {d.type !== "sovereign" && <span className="text-xs text-muted-foreground">· {TYPE_LABEL[d.type]}</span>}
                       </span>
                       <StatusBadge status={d.status} />
                     </Link>
