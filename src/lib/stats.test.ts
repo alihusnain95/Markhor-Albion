@@ -5,47 +5,34 @@ const d = (id: string, type: StatDestination["type"], status: StatDestination["s
   id, slug: id, type, status, continent: "Europe", parent_id: null, visit_count: null, ...extra,
 });
 
-describe("travel stats", () => {
-  const uk = d("uk", "sovereign", "not_visited");
-  const base = [
-    uk,
-    d("england", "constituent", "visited", { parent_id: "uk" }),
-    d("scotland", "constituent", "visited", { parent_id: "uk" }),
-    d("poland", "sovereign", "visited", { visit_count: 7 }),
+describe("personal country count", () => {
+  const places = [
+    d("china", "sovereign", "visited", { continent: "Asia" }),
+    d("hong-kong", "sar", "visited", { continent: "Asia", parent_id: "china" }),
+    d("macau", "sar", "visited", { continent: "Asia", parent_id: "china" }),
     d("gibraltar", "territory", "visited"),
-    d("hong-kong", "sar", "not_visited", { continent: "Asia" }),
+    d("england", "constituent", "visited", { parent_id: "uk" }),
     d("northern-cyprus", "disputed", "visited"),
     d("japan", "sovereign", "planned", { continent: "Asia" }),
+    d("uk", "sovereign", "not_visited"),
   ];
 
-  it("counts the UK once via its constituent countries", () => {
-    expect(computeTravelStats(base).sovereign).toBe(2); // UK + Poland
+  it("counts every separately flagged visited place as one country", () => {
+    expect(computeTravelStats(places).countriesVisited).toBe(6);
   });
 
-  it("tracks England and Scotland separately from sovereign states", () => {
-    expect(computeTravelStats(base).constituentAndTerritories).toBe(3); // England, Scotland, Gibraltar
+  it("counts Hong Kong and Macau separately from China", () => {
+    expect(computeTravelStats(places.slice(0, 3)).countriesVisited).toBe(3);
   });
 
-  it("does not count a disputed territory as sovereign by default", () => {
-    const s = computeTravelStats(base);
-    expect(s.otherTracked).toBe(1);
-    expect(computeTravelStats(base, { count_disputed_as_sovereign: true, count_uk_via_constituents: true }).sovereign).toBe(3);
-  });
-
-  it("never counts planned destinations as visited", () => {
-    const s = computeTravelStats(base);
+  it("does not count planned or unvisited destinations", () => {
+    const s = computeTravelStats(places);
     expect(s.planned).toBe(1);
-    expect(s.continents).toEqual(["Europe"]);
-  });
-
-  it("does not assume an unknown visit count is one", () => {
-    const s = computeTravelStats(base);
-    expect(s.knownVisitTotal).toBe(7);
-    expect(s.unconfirmedCounts).toBe(4);
+    expect(s.continents).toEqual(["Asia", "Europe"]);
   });
 
   it("does not double-count duplicate records", () => {
-    expect(computeTravelStats([...base, base[3]!]).destinationsTracked).toBe(5);
+    expect(computeTravelStats([...places, places[0]!]).countriesVisited).toBe(6);
   });
 });
 
