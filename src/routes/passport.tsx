@@ -8,10 +8,10 @@ import { destinationsQuery, tripsQuery, TYPE_LABEL, STATUS_LABEL } from "@/lib/q
 export const Route = createFileRoute("/passport")({
   head: () => ({
     meta: [
-      { title: "My Travel Passport | Markhor Albion" },
-      { name: "description", content: "A digital travel passport: destinations, visit counts and a chronological timeline of trips." },
+      { title: "Travel Timeline | Markhor Albion" },
+      { name: "description", content: "A chronological record of journeys, dates, destinations and places explored." },
       { property: "og:title", content: "My Travel Passport — Markhor Albion" },
-      { property: "og:description", content: "Every destination, visit and trip in one travel record." },
+      { property: "og:description", content: "Every journey and destination in one chronological travel record." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -44,7 +44,7 @@ function Passport() {
 
   return (
     <>
-      <PageTitle title="My Travel Passport" intro="A visual record of my travel history and journeys around the world. Visit counts appear only where confirmed." />
+      <PageTitle title="Travel Timeline" intro="A chronological record of the journeys I have taken, with dates, destinations and places explored." />
       <div className="container-page grid gap-6 pb-10 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0 space-y-5">
           <StatsGrid compact />
@@ -71,9 +71,9 @@ function Passport() {
         </div>
 
         <aside className="h-fit rounded-xl border border-border bg-card p-5 lg:sticky lg:top-20">
-          <h2 className="font-serif text-xl">My Journey Timeline</h2>
+          <h2 className="font-serif text-xl">Journey History</h2>
           {trips.length === 0 ? (
-            <p className="mt-4 text-sm text-muted-foreground">No trips recorded yet. Trips with real dates and cities are added from the admin dashboard — repeat visits are separate trips, never duplicate countries.</p>
+            <p className="mt-4 text-sm text-muted-foreground">No journeys recorded yet. Add journeys with dates and places from the admin dashboard. Repeat visits can be recorded separately.</p>
           ) : (
             <ol className="mt-5 space-y-5">
               {trips.map((t) => {
