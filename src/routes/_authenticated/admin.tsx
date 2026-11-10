@@ -108,7 +108,7 @@ function Admin() {
 const SECTIONS = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "destinations", label: "Destinations", icon: MapPin },
-  { id: "trips", label: "Trips", icon: Plane },
+  { id: "trips", label: "Travel Timeline", icon: Plane },
   { id: "journal", label: "Blog Articles", icon: FileText },
   { id: "gallery", label: "Gallery", icon: Images },
   { id: "wonders", label: "World Wonders", icon: Award },
@@ -174,7 +174,7 @@ function DashboardHome({ go }: { go: (s: SectionId) => void }) {
   const published = arts.filter((a) => a.status === "published").length;
   const cards = [
     { icon: MapPin, value: dests.filter((d) => d.status === "visited").length, label: "Destinations visited", sub: `${dests.length} tracked` },
-    { icon: Plane, value: trips.length, label: "Trips recorded" },
+    { icon: Plane, value: trips.length, label: "Journeys recorded" },
     { icon: FileText, value: published, label: "Articles published", sub: `${arts.length - published} drafts` },
     { icon: CalendarDays, value: plans.length, label: "Planned trips" },
     { icon: Landmark, value: unesco.filter((u) => u.status === "visited").length, label: "UNESCO visited", sub: `of ${unesco.length}` },
@@ -211,7 +211,7 @@ function DashboardHome({ go }: { go: (s: SectionId) => void }) {
           <div className="mt-4 grid grid-cols-2 gap-2">
             <button className={btn} onClick={() => go("destinations")}>Add destination</button>
             <button className={btn} onClick={() => go("journal")}>Write article</button>
-            <button className={btn} onClick={() => go("trips")}>Record trip</button>
+            <button className={btn} onClick={() => go("trips")}>Add journey</button>
             <button className={btn} onClick={() => go("plans")}>Create plan</button>
           </div>
           <p className="mt-4 text-xs text-muted-foreground">Photo uploads aren't available yet — add images to articles by link for now.</p>
@@ -363,7 +363,7 @@ function TripsAdmin() {
   return (
     <div className="mt-6 grid gap-8 lg:grid-cols-2">
       <div className="space-y-3 border border-border p-4">
-        <p className="font-serif text-lg">Record a trip</p>
+        <p className="font-serif text-lg">Add a journey to your timeline</p>
         <Input placeholder="Trip title" value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} className="rounded-none" />
         <div className="grid grid-cols-2 gap-2">
           <label className="text-xs text-muted-foreground">Departure<Input type="date" value={f.start_date} onChange={(e) => setF({ ...f, start_date: e.target.value })} className="rounded-none" /></label>
@@ -381,7 +381,7 @@ function TripsAdmin() {
           ))}
         </div>
         <label className="flex items-center gap-2 text-sm"><Switch checked={f.is_public} onCheckedChange={(v) => setF({ ...f, is_public: v })} />Show publicly</label>
-        <button onClick={add} className={btn}>Add trip</button>
+        <button onClick={add} className={btn}>Save journey</button>
       </div>
       <ul className="divide-y divide-border">
         {trips.map((t) => (
