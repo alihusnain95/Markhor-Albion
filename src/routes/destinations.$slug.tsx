@@ -4,7 +4,7 @@ import { Building2, ChevronRight, Globe2, MapPin, Plane } from "lucide-react";
 import { EmptyState, LoadingRows, StatusBadge } from "@/components/status-badge";
 import { Flag, PhotoCard, StatTile } from "@/components/ui-kit";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { articlesQuery, destinationsQuery, pakistanWondersQuery, unescoQuery, worldWondersQuery, TYPE_LABEL, STATUS_LABEL } from "@/lib/queries";
+import { articlesQuery, destinationsQuery, mediaQuery, pakistanWondersQuery, unescoQuery, worldWondersQuery, TYPE_LABEL, STATUS_LABEL } from "@/lib/queries";
 import { DESTINATION_IMAGES, DESTINATION_TAGLINES, PAKISTAN_IMAGES, UNESCO_IMAGES } from "@/lib/images";
 import { PERSONAL_PHOTOS } from "@/lib/personal-photos";
 import { LANDMARK_CREDITS } from "@/lib/landmark-images";
@@ -36,6 +36,7 @@ function DestinationPage() {
   const { slug } = Route.useParams();
   const { data: all = [], isLoading } = useQuery(destinationsQuery);
   const articles = useQuery(articlesQuery).data ?? [];
+  const media = useQuery(mediaQuery).data ?? [];
   const unesco = useQuery(unescoQuery).data ?? [];
   const wonders = useQuery(worldWondersQuery).data ?? [];
   const pk = useQuery(pakistanWondersQuery).data ?? [];
@@ -47,6 +48,9 @@ function DestinationPage() {
   const parent = all.find((x) => x.id === d.parent_id);
   const children = all.filter((x) => x.parent_id === d.id);
   const related = articles.filter((a) => a.destination_id === d.id);
+  const countryMedia = media.filter((m) => m.is_public && (m.destination_id === d.id || (!!parent && m.destination_id === parent.id)));
+  const countryPhotos = countryMedia.filter((m) => m.kind === "photo");
+  const countryVideos = countryMedia.filter((m) => m.kind !== "photo");
   const sites = unesco.filter((u) => u.destination_id === d.id);
   const ws = wonders.filter((w) => w.destination_id === d.id);
   const attractions = d.slug === "pakistan" ? pk : [];
@@ -87,9 +91,9 @@ function DestinationPage() {
       <div className="container-page py-8">
         <Tabs defaultValue="overview">
           <TabsList className="h-auto w-full justify-start gap-1 overflow-x-auto rounded-none border-b border-border bg-transparent p-0">
-            {["overview", "cities", "attractions", "unesco", "experiences", "photos", "articles", "tips"].map((t) => (
+            {["overview", "cities", "attractions", "unesco", "experiences", "photos", "videos", "stories", "tips"].map((t) => (
               <TabsTrigger key={t} value={t} className="rounded-none border-b-2 border-transparent px-4 py-2.5 capitalize data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-ice">
-                {t === "unesco" ? "UNESCO" : t === "experiences" ? "My Experiences" : t === "tips" ? "Travel Tips" : t}
+                {t === "unesco" ? "UNESCO" : t === "experiences" ? "My Experiences" : t === "tips" ? "Travel Tips" : t === "stories" ? "Stories" : t === "videos" ? "Videos" : t}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -146,10 +150,18 @@ function DestinationPage() {
           </TabsContent>
 
           <TabsContent value="photos" className="mt-8">
-            {(() => {
+            {countryPhotos.length ? (
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+                {countryPhotos.map((p) => (
+                  <figure key={p.id} className="group overflow-hidden rounded-lg border border-border">
+                    <img src={p.url} alt={p.alt_text ?? p.caption ?? d.name} loading="lazy" className="aspect-[4/3] w-full bg-background object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
+                    {(p.caption || p.location || p.place) && <figcaption className="px-3 py-2 text-xs text-muted-foreground">{p.caption ?? p.location ?? p.place}</figcaption>}
+                  </figure>
+                ))}
+              </div>
+            ) : (() => {
               const own = PERSONAL_PHOTOS[d.slug] ?? (parent ? PERSONAL_PHOTOS[parent.slug] : undefined) ?? [];
-              if (!own.length) return <Empty>No personal photographs uploaded yet.</Empty>;
-              return (
+              return own.length ? (
                 <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
                   {own.map((p) => (
                     <figure key={p.url} className="group overflow-hidden rounded-lg border border-border">
@@ -158,12 +170,32 @@ function DestinationPage() {
                     </figure>
                   ))}
                 </div>
-              );
+              ) : <Empty>No personal photographs uploaded yet.</Empty>;
             })()}
           </TabsContent>
 
-          <TabsContent value="articles" className="mt-8">
-            {related.length ? <ul className="space-y-2">{related.map((a) => <li key={a.id}><Link to="/journal/$slug" params={{ slug: a.slug }} className="font-serif text-lg hover:text-ice">{a.title}</Link></li>)}</ul> : <Empty>No published articles yet.</Empty>}
+          <TabsContent value="videos" className="mt-8">
+            {countryVideos.length ? (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {countryVideos.map((item) => (
+                  <figure key={item.id} className="overflow-hidden rounded-lg border border-border bg-card">
+                    {item.kind === "video" ? (
+                      <video controls preload="metadata" poster={item.thumbnail_url ?? undefined} className="aspect-video w-full bg-background">
+                        <source src={item.url} />
+                        Your browser does not support embedded video.
+                      </video>
+                    ) : (
+                      <iframe src={item.url} title={item.caption ?? item.place ?? `${d.name} video`} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen className="aspect-video w-full bg-background" />
+                    )}
+                    {(item.caption || item.location || item.place) && <figcaption className="px-3 py-2 text-xs text-muted-foreground">{item.caption ?? item.location ?? item.place}</figcaption>}
+                  </figure>
+                ))}
+              </div>
+            ) : <Empty>No videos have been added for this destination yet.</Empty>}
+          </TabsContent>
+
+          <TabsContent value="stories" className="mt-8">
+            {related.length ? <ul className="space-y-3">{related.map((a) => <li key={a.id}><Link to="/journal/$slug" params={{ slug: a.slug }} className="font-serif text-lg hover:text-ice">{a.title}</Link></li>)}</ul> : <Empty>No published stories yet.</Empty>}
           </TabsContent>
 
           <TabsContent value="tips" className="mt-8">
