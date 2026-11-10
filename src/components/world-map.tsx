@@ -45,10 +45,9 @@ const COUNTRY_CODES: Record<string, string> = {
   Zimbabwe: "ZW", "Isle of Man": "IM", Gibraltar: "GI",
 };
 
-function flagForCountry(name: string) {
+function flagUrlForCountry(name: string) {
   const code = COUNTRY_CODES[name];
-  if (!code) return "🌐";
-  return String.fromCodePoint(...[...code].map((letter) => letter.charCodeAt(0) + 127397));
+  return code ? `https://flagcdn.com/w40/${code.toLowerCase()}.png` : null;
 }
 
 export interface MapSelection {
@@ -323,7 +322,17 @@ export function WorldMap({
           className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full border border-border bg-popover px-2.5 py-1 text-xs font-medium text-popover-foreground shadow-lg"
           style={{ left: hover.x, top: hover.y - 10 }}
         >
-          <span className="mr-1.5 text-sm leading-none" aria-hidden="true">{flagForCountry(hover.name)}</span>
+          {flagUrlForCountry(hover.name) ? (
+            <img
+              src={flagUrlForCountry(hover.name)!}
+              alt=""
+              aria-hidden="true"
+              className="mr-1.5 inline-block h-3.5 w-5 rounded-[2px] object-cover align-[-2px]"
+              loading="eager"
+            />
+          ) : (
+            <span className="mr-1.5" aria-hidden="true">🌐</span>
+          )}
           <span>{hover.name}</span>
         </div>
       )}
