@@ -30,12 +30,13 @@ function Panel({ className = "", children }: { className?: string; children: Rea
   return <div className={`rounded-xl border border-border bg-card/80 backdrop-blur-md ${className}`}>{children}</div>;
 }
 
-export function HomeTop({ dests, plans }: { dests: DestinationWithVisit[]; plans: PlannedTrip[] }) {
+export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]; plans: PlannedTrip[]; trips: Array<{ id: string; title: string; start_date: string | null; end_date: string | null; cities: string[] | null; destination_ids: string[]; notes: string | null }> }) {
   const { stats } = useTravelStats();
   const [q, setQ] = useState("");
   const byId = (id: string | null) => dests.find((d) => d.id === id) ?? null;
   const ordered = plans.filter((p) => p.intended_start).sort((a, b) => (a.intended_start! < b.intended_start! ? -1 : 1));
   const next = ordered[0];
+  const recent = [...trips].filter((t) => t.start_date).sort((a, b) => (a.start_date! < b.start_date! ? 1 : -1)).slice(0, 6);
   const nextDest = next ? byId(next.destination_id) : null;
   const featured = FEATURED.map((s) => dests.find((d) => d.slug === s)).filter(Boolean) as DestinationWithVisit[];
   const match = q.trim() ? dests.filter((d) => d.name.toLowerCase().includes(q.trim().toLowerCase())).slice(0, 5) : [];
@@ -120,33 +121,54 @@ export function HomeTop({ dests, plans }: { dests: DestinationWithVisit[]; plans
       </section>
 
       {/* Map row */}
-      <section className="container-page mt-3 grid gap-3 lg:grid-cols-[190px_minmax(0,1fr)_270px]">
+      <section className="container-page mt-3 grid gap-3 lg:grid-cols-[270px_minmax(0,1fr)_270px]">
         <Panel className="p-5">
-          <p className="text-sm font-bold uppercase tracking-[0.2em]">My travel map</p>
-          <p className="mt-2 text-[0.65rem] uppercase leading-relaxed tracking-widest text-muted-foreground">Explore where I've been and where I'm going</p>
-          <ul className="mt-5 space-y-3 text-sm">
-            <li className="flex items-center gap-3"><span className="h-3.5 w-3.5 rounded-full border-2 border-primary bg-primary/50" />Visited</li>
-            <li className="flex items-center gap-3"><span className="h-3.5 w-3.5 rounded-full border-2 border-planned bg-planned/50" />Upcoming</li>
-            <li className="flex items-center gap-3"><span className="h-3.5 w-3.5 rounded-full border-2 border-muted-foreground/70 bg-unvisited" />Planning</li>
-            <li className="flex items-center gap-3"><span className="h-3.5 w-3.5 rounded-full border-2 border-dashed border-ice bg-transparent" />Needs confirmation</li>
-          </ul>
-          <div className="relative mt-6">
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search country…" aria-label="Search country" className="w-full rounded-full border border-border bg-background px-4 py-2 pr-9 text-xs outline-none focus:border-primary" />
-            <Search className="pointer-events-none absolute right-3 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
-            {match.length > 0 && (
-              <ul className="absolute inset-x-0 top-full z-20 mt-1 overflow-hidden rounded-lg border border-border bg-popover text-sm">
-                {match.map((d) => (
-                  <li key={d.id}><Link to="/destinations/$slug" params={{ slug: d.slug }} className="block px-3 py-2 hover:bg-accent">{d.name}</Link></li>
-                ))}
-              </ul>
-            )}
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-bold uppercase tracking-[0.2em]">Recent trips</p>
+            <Link to="/passport" className="text-xs text-ice">View all</Link>
           </div>
+          <p className="mt-2 text-[0.65rem] uppercase tracking-widest text-muted-foreground">Journeys already taken</p>
+          {recent.length === 0 ? (
+            <p className="mt-6 text-sm text-muted-foreground">Your completed journeys will appear here once trip dates are added.</p>
+          ) : (
+            <ol className="relative mt-5 space-y-4 border-l border-border pl-5">
+              {recent.map((trip) => {
+                const d = dests.find((x) => trip.destination_ids.includes(x.id));
+                const img = d ? DESTINATION_IMAGES[d.slug] : null;
+                return (
+                  <li key={trip.id} className="relative flex gap-3">
+                    <span className="absolute -left-[1.6rem] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-primary bg-background" />
+                    {img ? <img src={img} alt="" loading="lazy" className="h-10 w-14 shrink-0 rounded object-cover" /> : <span className="h-10 w-14 shrink-0 rounded bg-muted" />}
+                    <span className="min-w-0 text-xs">
+                      <span className="block font-semibold">{trip.title}</span>
+                      <span className="mt-0.5 block text-[0.65rem] uppercase text-muted-foreground">{fmtRange(trip.start_date, trip.end_date)}</span>
+                      {trip.cities?.length ? <span className="mt-1 block truncate text-muted-foreground">{trip.cities.join(" · ")}</span> : null}
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
+          )}
         </Panel>
 
         <Panel className="relative overflow-hidden">
           <Link to="/my-world" aria-label="Open the interactive world map">
             <WorldMap destinations={dests} interactive={false} arcs={arcs} pins={pins} className="aspect-[16/10] w-full" />
           </Link>
+          <div className="absolute left-4 top-4 rounded-lg border border-border/70 bg-background/85 p-3 text-[0.65rem] backdrop-blur-md">
+            <p className="mb-2 font-bold uppercase tracking-[0.16em]">My travel map</p>
+            <ul className="space-y-1.5">
+              <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full border-2 border-primary bg-primary/50" />Visited</li>
+              <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full border-2 border-planned bg-planned/50" />Upcoming</li>
+              <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full border-2 border-muted-foreground/70 bg-unvisited" />Planning</li>
+              <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full border-2 border-dashed border-ice bg-transparent" />Needs confirmation</li>
+            </ul>
+            <div className="relative mt-3">
+              <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search country…" aria-label="Search country" className="w-40 rounded-full border border-border bg-background px-3 py-1.5 pr-7 text-[0.65rem] outline-none focus:border-primary" />
+              <Search className="pointer-events-none absolute right-2 top-2 h-3 w-3 text-muted-foreground" />
+              {match.length > 0 && <ul className="absolute inset-x-0 top-full z-20 mt-1 overflow-hidden rounded-lg border border-border bg-popover text-sm">{match.map((d) => <li key={d.id}><Link to="/destinations/$slug" params={{ slug: d.slug }} className="block px-3 py-2 hover:bg-accent">{d.name}</Link></li>)}</ul>}
+            </div>
+          </div>
           <Compass className="absolute bottom-4 left-4 h-10 w-10 text-muted-foreground/60" />
           <div className="absolute bottom-4 left-20 flex gap-8 text-xs">
             <div><p className="font-serif text-2xl">{stats?.sovereign ?? "—"}</p><p className="text-[0.6rem] uppercase tracking-widest text-muted-foreground">Countries visited</p></div>
