@@ -29,7 +29,7 @@ const COUNTRY_CODES: Record<string, string> = {
   Israel: "IL", Italy: "IT", Jamaica: "JM", Japan: "JP", Jordan: "JO", Kazakhstan: "KZ",
   Kenya: "KE", Kosovo: "XK", Kuwait: "KW", Kyrgyzstan: "KG", Laos: "LA", Latvia: "LV",
   Lebanon: "LB", Libya: "LY", Liechtenstein: "LI", Lithuania: "LT", Luxembourg: "LU",
-  Macau: "MO", Madagascar: "MG", Malaysia: "MY", Maldives: "MV", Malta: "MT", Mauritius: "MU",
+  Macau: "MO", Macao: "MO", Madagascar: "MG", Malaysia: "MY", Maldives: "MV", Malta: "MT", Mauritius: "MU",
   Mexico: "MX", Moldova: "MD", Monaco: "MC", Mongolia: "MN", Montenegro: "ME", Morocco: "MA",
   Myanmar: "MM", Nepal: "NP", Netherlands: "NL", "New Zealand": "NZ", Nicaragua: "NI",
   Nigeria: "NG", "North Korea": "KP", "North Macedonia": "MK", Norway: "NO", Oman: "OM",
@@ -46,7 +46,11 @@ const COUNTRY_CODES: Record<string, string> = {
 };
 
 function flagUrlForCountry(name: string) {
-  const code = COUNTRY_CODES[name];
+  const normalized = name.trim().toLowerCase();
+  if (["northern cyprus", "turkish cyprus", "turkish republic of northern cyprus"].includes(normalized)) {
+    return "https://upload.wikimedia.org/wikipedia/commons/e/eb/Flag_of_Northern_Cyprus.svg";
+  }
+  const code = COUNTRY_CODES[name] ?? COUNTRY_CODES[name.replace(/^the /i, "")];
   return code ? `https://flagcdn.com/w40/${code.toLowerCase()}.png` : null;
 }
 
