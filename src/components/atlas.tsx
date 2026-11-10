@@ -132,13 +132,6 @@ export function DestinationPanel({ selection, onClose }: { selection: MapSelecti
             )}
           </dl>
           {d.status_description && <p className="mt-5 border-l-2 border-primary pl-3 text-xs text-muted-foreground">{d.status_description}</p>}
-          <Link
-            to="/destinations/$slug"
-            params={{ slug: d.slug }}
-            className="mt-6 inline-flex rounded-md bg-primary px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-primary-foreground hover:bg-primary/90"
-          >
-            Open destination page
-          </Link>
         </>
       )}
     </aside>
