@@ -9,6 +9,11 @@ import type { DestinationWithVisit, PlannedTrip } from "@/lib/queries";
 /** The owner's curated front-page row — planned and visited places, not a claim about which have been seen. */
 const FEATURED = ["hong-kong", "macau", "shanghai", "kartarpur", "faisalabad", "saudi-arabia", "beijing", "london"];
 
+function fmtMonth(d: string | null) {
+  if (!d) return "DATE TO BE CONFIRMED";
+  return new Date(d + "T00:00:00").toLocaleDateString("en-GB", { month: "long", year: "numeric" }).toUpperCase();
+}
+
 function fmtDate(d: string | null) {
   if (!d) return null;
   return new Date(d + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }).toUpperCase();
@@ -141,7 +146,7 @@ export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]
                     {img ? <img src={img} alt="" loading="lazy" className="h-10 w-14 shrink-0 rounded object-cover" /> : <span className="h-10 w-14 shrink-0 rounded bg-muted" />}
                     <span className="min-w-0 text-xs">
                       <span className="block font-semibold">{trip.title}</span>
-                      <span className="mt-0.5 block text-[0.65rem] uppercase text-muted-foreground">{fmtRange(trip.start_date, trip.end_date)}</span>
+                      <span className="mt-0.5 block text-[0.65rem] uppercase text-muted-foreground">{fmtMonth(trip.start_date)}</span>
                       {trip.cities?.length ? <span className="mt-1 block truncate text-muted-foreground">{trip.cities.join(" · ")}</span> : null}
                     </span>
                   </li>
