@@ -23,13 +23,13 @@ export function useTravelStats() {
   const tq = useQuery(tripsQuery);
   const stats = dq.data ? computeTravelStats(dq.data) : null;
   return {
-    loading: dq.isLoading,
+    loading: dq.isLoading || uq.isLoading || wq.isLoading || tq.isLoading,
     error: dq.error,
     stats,
     trips: tq.data?.length ?? 0,
-    unescoVisited: uq.data?.filter((s) => s.list_status === "inscribed" && s.status === "visited").length ?? 0,
+    unescoVisited: uq.isLoading ? undefined : uq.data?.filter((s) => s.list_status === "inscribed" && s.status === "visited").length,
     unescoTotal: uq.data?.filter((s) => s.list_status === "inscribed").length ?? 0,
-    wondersCompleted: wq.data?.filter((w) => w.status === "completed").length ?? 0,
+    wondersCompleted: wq.isLoading ? undefined : wq.data?.filter((w) => w.status === "completed").length,
     wondersTotal: wq.data?.length ?? 0,
   };
 }
