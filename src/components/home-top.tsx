@@ -44,7 +44,6 @@ export function HomeTop({ dests, plans }: { dests: DestinationWithVisit[]; plans
     { to: "/passport", title: "The Journey", sub: "My trips, experiences and adventures", img: TILE_IMAGES.journey },
     { to: "/my-world", title: "The World", sub: "Explore countries, cultures and places", img: TILE_IMAGES.world },
     { to: "/journal", title: "The Thinking", sub: "Ideas, reflections and perspectives", img: TILE_IMAGES.thinking },
-    { to: "/gallery", title: "Gallery", sub: "Photos, videos and moments", img: TILE_IMAGES.gallery },
   ] as const;
 
   // Flight paths follow the published plan, starting from London.
@@ -105,7 +104,7 @@ export function HomeTop({ dests, plans }: { dests: DestinationWithVisit[]; plans
       </section>
 
       {/* Four tiles */}
-      <section className="container-page relative z-10 -mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="container-page relative z-10 -mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {tiles.map((t) => (
           <Link key={t.title} to={t.to} className="group flex items-center gap-4 overflow-hidden rounded-xl border border-border bg-card/90 p-2 pr-4 backdrop-blur-md transition-colors hover:border-primary">
             <span className="flex h-20 w-24 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-background text-primary">
@@ -121,7 +120,7 @@ export function HomeTop({ dests, plans }: { dests: DestinationWithVisit[]; plans
       </section>
 
       {/* Map row */}
-      <section className="container-page mt-3 grid gap-3 lg:grid-cols-[220px_1fr_300px]">
+      <section className="container-page mt-3 grid gap-3 lg:grid-cols-[190px_minmax(0,1fr)_270px]">
         <Panel className="p-5">
           <p className="text-sm font-bold uppercase tracking-[0.2em]">My travel map</p>
           <p className="mt-2 text-[0.65rem] uppercase leading-relaxed tracking-widest text-muted-foreground">Explore where I've been and where I'm going</p>
@@ -146,7 +145,7 @@ export function HomeTop({ dests, plans }: { dests: DestinationWithVisit[]; plans
 
         <Panel className="relative overflow-hidden">
           <Link to="/my-world" aria-label="Open the interactive world map">
-            <WorldMap destinations={dests} interactive={false} arcs={arcs} pins={pins} className="aspect-[2/1] w-full" />
+            <WorldMap destinations={dests} interactive={false} arcs={arcs} pins={pins} className="aspect-[16/10] w-full" />
           </Link>
           <Compass className="absolute bottom-4 left-4 h-10 w-10 text-muted-foreground/60" />
           <div className="absolute bottom-4 left-20 flex gap-8 text-xs">
