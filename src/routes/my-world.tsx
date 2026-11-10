@@ -5,7 +5,7 @@ import { WorldMap, MapLegend } from "@/components/world-map";
 import { StatsGrid } from "@/components/atlas";
 import { StatusBadge } from "@/components/status-badge";
 import { Chips, Flag, PageTitle, SearchBox } from "@/components/ui-kit";
-import { destinationsQuery, TYPE_LABEL } from "@/lib/queries";
+import { destinationsQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/my-world")({
   head: () => ({
