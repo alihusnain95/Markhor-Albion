@@ -10,7 +10,7 @@ export const Route = createFileRoute("/destinations/")({
   head: () => ({
     meta: [
       { title: "Destinations | Markhor Albion" },
-      { name: "description", content: "Every destination in the Markhor Albion atlas, including separately flagged territories and special regions." },
+      { name: "description", content: "Explore travel guides and destinations from Markhor Albion." },
       { property: "og:title", content: "Destinations | Markhor Albion" },
       { property: "og:description", content: "Browse every tracked destination and its visit status." },
       { property: "og:type", content: "website" },
@@ -26,7 +26,7 @@ function Destinations() {
   const list = data.filter((d) => d.name.toLowerCase().includes(q.toLowerCase()));
   return (
     <>
-      <PageHeader eyebrow="Destinations" title="Every separately flagged destination, counted individually." />
+      <PageHeader eyebrow="Destinations" title="Guides" />
       <section className="container-page py-12">
         <div className="mb-8 flex flex-wrap gap-3">
           <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search…" className="max-w-xs rounded-none" aria-label="Search destinations" />
