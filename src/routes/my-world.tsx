@@ -2,8 +2,7 @@ import { useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { WorldMap, MapLegend } from "@/components/world-map";
-import { StatsGrid } from "@/components/atlas";
-import { StatusBadge } from "@/components/status-badge";
+import { DestinationCard, StatsGrid } from "@/components/atlas";
 import { Chips, Flag, PageTitle, SearchBox } from "@/components/ui-kit";
 import { destinationsQuery } from "@/lib/queries";
 
@@ -38,15 +37,6 @@ function MyWorld() {
     setQ("");
     navigate({ to: "/destinations/$slug", params: { slug: d.slug } });
   };
-
-  const grouped = useMemo(() => {
-    const m = new Map<string, typeof dests>();
-    for (const d of dests) {
-      const k = d.continent ?? "Other";
-      m.set(k, [...(m.get(k) ?? []), d]);
-    }
-    return [...m.entries()].sort();
-  }, [dests]);
 
   const shown = filter === "all" ? dests : dests.filter((d) => d.status === filter);
 
@@ -87,26 +77,10 @@ function MyWorld() {
       </section>
 
       <section className="container-page py-10" aria-labelledby="list-heading">
-        <h2 id="list-heading" className="font-serif text-3xl font-light">All tracked destinations</h2>
-        <p className="mt-2 text-sm text-muted-foreground">A list-based view of the map.</p>
-        <div className="mt-8 grid gap-10 md:grid-cols-2">
-          {grouped.map(([continent, list]) => (
-            <div key={continent}>
-              <p className="eyebrow mb-3">{continent}</p>
-              <ul className="divide-y divide-border border-y border-border">
-                {list.map((d) => (
-                  <li key={d.id}>
-                    <Link to="/destinations/$slug" params={{ slug: d.slug }} className="flex w-full items-center justify-between gap-3 py-2.5 text-left text-sm hover:text-ice">
-                      <span className="flex items-center gap-2">
-                        <Flag iso2={d.iso2} slug={d.slug} emoji={d.flag} className="h-3.5 w-5 rounded-[2px]" />{d.name}
-                      </span>
-                      <StatusBadge status={d.status} />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+        <h2 id="list-heading" className="font-serif text-3xl font-light">Explore destinations</h2>
+        <p className="mt-2 text-sm text-muted-foreground">Browse every destination in the atlas. Select a country to explore its cities, photos and stories.</p>
+        <div className="mt-8 grid grid-cols-1 gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
+          {shown.map((d) => <DestinationCard key={d.id} d={d} />)}
         </div>
       </section>
     </>
