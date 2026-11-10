@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import {
-  destinationsQuery, pakistanWondersQuery, unescoQuery, worldWondersQuery, plansQuery, tripsQuery, settingQuery, countingQuery,
+  destinationsQuery, pakistanWondersQuery, unescoQuery, worldWondersQuery, plansQuery, tripsQuery, settingQuery,
   STATUS_LABEL, TYPE_LABEL, mediaQuery, type DestinationWithVisit, type Article, type PlannedTrip, type MediaItem,
 } from "@/lib/queries";
 import { ARTICLE_CATEGORIES } from "@/routes/journal.index";
