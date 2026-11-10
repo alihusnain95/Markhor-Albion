@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { WorldMap, MapLegend, type MapSelection } from "@/components/world-map";
-import { DestinationPanel, StatsGrid } from "@/components/atlas";
+import { WorldMap, MapLegend } from "@/components/world-map";
+import { StatsGrid } from "@/components/atlas";
 import { StatusBadge } from "@/components/status-badge";
 import { Chips, Flag, PageTitle, SearchBox } from "@/components/ui-kit";
 import { destinationsQuery, TYPE_LABEL } from "@/lib/queries";
@@ -23,7 +23,7 @@ export const Route = createFileRoute("/my-world")({
 
 function MyWorld() {
   const { data: dests = [], isLoading, error } = useQuery(destinationsQuery);
-  const [selection, setSelection] = useState<MapSelection | null>(null);
+  const navigate = useNavigate();
   const [q, setQ] = useState("");
   const [focus, setFocus] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "visited" | "planned" | "not_visited">("all");
@@ -36,9 +36,8 @@ function MyWorld() {
   const choose = (slug: string) => {
     const d = dests.find((x) => x.slug === slug);
     if (!d) return;
-    setSelection({ key: d.slug, name: d.name, destination: d });
-    setFocus(d.slug);
     setQ("");
+    navigate({ to: "/destinations/$slug", params: { slug: d.slug } });
   };
 
   const grouped = useMemo(() => {
@@ -75,12 +74,7 @@ function MyWorld() {
         </div>
         {error && <p className="mt-3 text-sm text-destructive">The atlas data could not be loaded: {error.message}</p>}
         <div className="relative mt-4 overflow-hidden rounded-xl border border-border">
-          <WorldMap destinations={shown} onSelect={setSelection} selectedKey={selection?.key ?? null} focusKey={focus} className="aspect-[4/3] w-full sm:aspect-[2/1]" />
-          {selection && (
-            <div className="border-t border-border lg:absolute lg:right-16 lg:top-4 lg:w-80 lg:border-t-0">
-              <DestinationPanel selection={selection} onClose={() => setSelection(null)} />
-            </div>
-          )}
+          <WorldMap destinations={shown} onSelect={(s) => { if (s.destination) navigate({ to: "/destinations/$slug", params: { slug: s.destination.slug } }); }} focusKey={focus} className="aspect-[4/3] w-full sm:aspect-[2/1]" />
           {!selection && isLoading && <p className="absolute left-4 top-4 text-xs text-muted-foreground">Loading destinations…</p>}
         </div>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card px-4 py-3">
@@ -103,13 +97,13 @@ function MyWorld() {
               <ul className="divide-y divide-border border-y border-border">
                 {list.map((d) => (
                   <li key={d.id}>
-                    <button onClick={() => { choose(d.slug); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="flex w-full items-center justify-between gap-3 py-2.5 text-left text-sm hover:text-ice">
+                    <Link to="/destinations/$slug" params={{ slug: d.slug }} className="flex w-full items-center justify-between gap-3 py-2.5 text-left text-sm hover:text-ice">
                       <span className="flex items-center gap-2">
                         <Flag iso2={d.iso2} slug={d.slug} emoji={d.flag} className="h-3.5 w-5 rounded-[2px]" />{d.name}
                         {d.type !== "sovereign" && <span className="text-xs text-muted-foreground">· {TYPE_LABEL[d.type]}</span>}
                       </span>
                       <StatusBadge status={d.status} />
-                    </button>
+                    </Link>
                   </li>
                 ))}
               </ul>
