@@ -23,7 +23,7 @@ import tileWorld from "@/assets/tile-world.jpg";
 import tileThinking from "@/assets/tile-thinking.jpg";
 import tileGallery from "@/assets/tile-gallery.jpg";
 import heroAliNight from "@/assets/home-hero-ali.png";
-export const HOME_HERO_IMAGE = dHK;
+export const HOME_HERO_IMAGE = heroAliNight;
 import uMoen from "@/assets/u-mohenjodaro.jpg";
 import uTaxila from "@/assets/u-taxila.jpg";
 import uTakht from "@/assets/u-takhtibahi.jpg";
