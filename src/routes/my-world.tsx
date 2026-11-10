@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { WorldMap, MapLegend } from "@/components/world-map";
 import { DestinationCard, StatsGrid } from "@/components/atlas";
@@ -37,15 +37,6 @@ function MyWorld() {
     setQ("");
     navigate({ to: "/destinations/$slug", params: { slug: d.slug } });
   };
-
-  const grouped = useMemo(() => {
-    const m = new Map<string, typeof dests>();
-    for (const d of dests) {
-      const k = d.continent ?? "Other";
-      m.set(k, [...(m.get(k) ?? []), d]);
-    }
-    return [...m.entries()].sort();
-  }, [dests]);
 
   const shown = filter === "all" ? dests : dests.filter((d) => d.status === filter);
 
