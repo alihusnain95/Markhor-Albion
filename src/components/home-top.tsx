@@ -47,9 +47,9 @@ export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]
   const match = q.trim() ? dests.filter((d) => d.name.toLowerCase().includes(q.trim().toLowerCase())).slice(0, 5) : [];
 
   const tiles = [
-    { to: "/passport", title: "The Journey", sub: "My trips, experiences and adventures", img: TILE_IMAGES.journey },
-    { to: "/my-world", title: "The World", sub: "Explore countries, cultures and places", img: TILE_IMAGES.world },
-    { to: "/journal", title: "The Thinking", sub: "Ideas, reflections and perspectives", img: TILE_IMAGES.thinking },
+    { to: "/wonders", title: "World Wonders", sub: "Extraordinary places worth discovering", img: TILE_IMAGES.world },
+    { to: "/unesco", title: "UNESCO Heritage", sub: "Explore humanity's remarkable heritage", img: TILE_IMAGES.journey },
+    { to: "/pakistan-50-wonders", title: "Pakistan Uncovered", sub: "Discover 50 remarkable places across Pakistan", img: TILE_IMAGES.thinking },
   ] as const;
 
   // Flight paths follow the published plan, starting from London.
@@ -109,7 +109,7 @@ export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]
         </div>
       </section>
 
-      {/* Four tiles */}
+      {/* Featured discovery links */}
       <section className="container-page relative z-10 -mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {tiles.map((t) => (
           <Link key={t.title} to={t.to} className="group flex items-center gap-4 overflow-hidden rounded-xl border border-border bg-card/90 p-2 pr-4 backdrop-blur-md transition-colors hover:border-primary">
