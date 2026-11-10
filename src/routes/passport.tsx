@@ -32,8 +32,8 @@ function Passport() {
   const continents = [...new Set(dests.map((d) => d.continent).filter(Boolean))].sort() as string[];
   const filtered = useMemo(() => {
     const list = dests.filter(
-      (d) => d.type !== "other" &&
       (d) =>
+        d.type !== "other" &&
         (continent === "all" || d.continent === continent) &&
         (status === "all" || d.status === status) &&
         (type === "all" || d.type === type) &&
