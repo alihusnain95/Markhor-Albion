@@ -22,8 +22,6 @@ export const NAV = [
   { to: "/about", label: "About" },
 ] as const;
 
-const REFLECTIONS = "Personal reflections";
-
 const HEADER = [
   { to: "/", label: "Home", exact: true },
   { to: "/my-world", label: "My World", exact: false },
@@ -126,10 +124,7 @@ export function SiteHeader() {
   }, []);
   useEffect(() => setOpen(false), [pathname]);
 
-  const onJournalReflections = pathname === "/journal" && searchStr.includes("topic=");
-
   const isActive = (to: string, exact: boolean) => {
-    if (to === "/journal") return pathname === "/journal" && !onJournalReflections;
     return exact ? pathname === to : pathname === to || pathname.startsWith(to + "/");
   };
 
@@ -159,9 +154,6 @@ export function SiteHeader() {
               {n.label}
             </Link>
           ))}
-          <Link to="/journal" search={{ topic: REFLECTIONS }} className={linkCls(onJournalReflections)}>
-            Thinking
-          </Link>
           <Link to="/about" className={linkCls(isActive("/about", false))}>About</Link>
         </nav>
 
@@ -211,13 +203,6 @@ export function SiteHeader() {
                 {n.label}
               </Link>
             ))}
-            <Link
-              to="/journal"
-              search={{ topic: REFLECTIONS }}
-              className="border-b border-border py-3.5 font-serif text-xl text-muted-foreground data-[status=active]:text-primary"
-            >
-              Thinking
-            </Link>
           </nav>
         </SheetContent>
       </Sheet>
