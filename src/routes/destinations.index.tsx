@@ -3,14 +3,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { DestinationCard } from "@/components/atlas";
 import { LoadingRows, PageHeader } from "@/components/status-badge";
-import { destinationsQuery, TYPE_LABEL } from "@/lib/queries";
+import { destinationsQuery } from "@/lib/queries";
 import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/destinations/")({
   head: () => ({
     meta: [
       { title: "Destinations | Markhor Albion" },
-      { name: "description", content: "Every destination in the Markhor Albion atlas, from sovereign countries to territories and special regions." },
+      { name: "description", content: "Every destination in the Markhor Albion atlas, including separately flagged territories and special regions." },
       { property: "og:title", content: "Destinations | Markhor Albion" },
       { property: "og:description", content: "Browse every tracked destination and its visit status." },
       { property: "og:type", content: "website" },
