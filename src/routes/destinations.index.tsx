@@ -23,22 +23,14 @@ export const Route = createFileRoute("/destinations/")({
 function Destinations() {
   const { data = [], isLoading } = useQuery(destinationsQuery);
   const [q, setQ] = useState("");
-  const [type, setType] = useState("all");
-  const list = data.filter((d) => (type === "all" || d.type === type) && d.name.toLowerCase().includes(q.toLowerCase()));
+  const list = data.filter((d) => d.name.toLowerCase().includes(q.toLowerCase()));
   return (
     <>
-      <PageHeader eyebrow="Destinations" title="Countries, regions and the places in between." />
+      <PageHeader eyebrow="Destinations" title="Every separately flagged destination, counted individually." />
       <section className="container-page py-12">
         <div className="mb-8 flex flex-wrap gap-3">
           <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search…" className="max-w-xs rounded-none" aria-label="Search destinations" />
-          <div className="flex flex-wrap gap-2">
-            {["all", ...Object.keys(TYPE_LABEL)].map((t) => (
-              <button key={t} onClick={() => setType(t)} className={`border px-3 py-2 text-xs ${type === t ? "border-primary bg-primary/15 text-ice" : "border-border text-muted-foreground hover:text-foreground"}`}>
-                {t === "all" ? "All" : TYPE_LABEL[t]}
-              </button>
-            ))}
-          </div>
-        </div>
+     </div>
         {isLoading ? <LoadingRows /> : (
           <div className="grid grid-cols-1 gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
             {list.map((d) => <DestinationCard key={d.id} d={d} />)}
