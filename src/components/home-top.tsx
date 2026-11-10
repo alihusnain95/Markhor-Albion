@@ -75,12 +75,11 @@ export function HomeTop({ dests, plans }: { dests: DestinationWithVisit[]; plans
   return (
     <>
       {/* Hero */}
-      <section className="relative isolate min-h-[88svh] overflow-hidden bg-[#061326] pt-16 md:min-h-[760px]">
-        <img src={HOME_HERO_IMAGE} alt="A traveller looking out over a city skyline at night" width={1920} height={1080} fetchPriority="high" className="absolute inset-0 h-full w-full object-cover object-center" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(3,12,29,0.96)_0%,rgba(5,19,43,0.78)_38%,rgba(5,19,43,0.20)_76%,rgba(5,19,43,0.12)_100%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(0deg,#061326_0%,rgba(6,19,38,0.05)_36%,rgba(4,13,29,0.22)_100%)]" />
-        <div className="absolute inset-x-0 top-16 h-px bg-gradient-to-r from-transparent via-ice/40 to-transparent" />
-        <div className="container-page relative flex min-h-[88svh] flex-col justify-center py-24 md:min-h-[760px]">
+      <section className="relative overflow-hidden pt-16">
+        <img src={HOME_HERO_IMAGE} alt="Hong Kong skyline at night" width={1920} height={1080} fetchPriority="high" className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/50 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
+        <div className="container-page relative flex min-h-[78svh] flex-col justify-center py-20 md:min-h-[640px]">
           {next && (
             <Link
               to="/next-adventure"
@@ -94,12 +93,11 @@ export function HomeTop({ dests, plans }: { dests: DestinationWithVisit[]; plans
               </span>
             </Link>
           )}
-          <p className="mb-5 flex items-center gap-3 text-[0.62rem] font-semibold uppercase tracking-[0.48em] text-sky-200/90"><span className="h-px w-10 bg-sky-300/80" /> A WORLD OF STORIES</p>
-          <h1 className="max-w-4xl font-serif text-5xl font-normal uppercase leading-[0.98] tracking-[-0.035em] text-white drop-shadow-[0_8px_32px_rgba(0,0,0,0.5)] md:text-7xl lg:text-[6.5rem]">
+          <h1 className="font-serif text-5xl font-normal uppercase leading-[1.02] tracking-tight md:text-7xl lg:text-8xl">
             The world<br /><span className="text-primary">is bigger than</span><br />the life we know
           </h1>
-          <p className="mt-7 text-[0.65rem] font-medium uppercase tracking-[0.42em] text-sky-100/80">Different places · Different people · A deeper you</p>
-          <blockquote className="mt-7 max-w-md border-l border-sky-300/80 pl-5 font-serif text-xl italic leading-relaxed text-white/90">
+          <p className="mt-5 text-[0.65rem] uppercase tracking-[0.5em] text-muted-foreground">Different places · Different people · A deeper you</p>
+          <blockquote className="mt-6 max-w-md border-l-2 border-primary pl-4 font-serif text-lg italic text-foreground/85">
             "Travel isn't just about seeing places, it's about understanding life."
           </blockquote>
         </div>
