@@ -1,11 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { X, Globe2, MapPin, Compass, Plane, Landmark, Award } from "lucide-react";
+import { X, Globe2, Compass, Plane, Landmark, Award } from "lucide-react";
 import { StatTile, Flag } from "./ui-kit";
 import { DESTINATION_IMAGES, DESTINATION_TAGLINES } from "@/lib/images";
 import {
   articlesQuery,
-  countingQuery,
   destinationsQuery,
   unescoQuery,
   worldWondersQuery,
@@ -19,11 +18,10 @@ import type { MapSelection } from "./world-map";
 
 export function useTravelStats() {
   const dq = useQuery(destinationsQuery);
-  const cq = useQuery(countingQuery);
   const uq = useQuery(unescoQuery);
   const wq = useQuery(worldWondersQuery);
   const tq = useQuery(tripsQuery);
-  const stats = dq.data ? computeTravelStats(dq.data, cq.data) : null;
+  const stats = dq.data ? computeTravelStats(dq.data) : null;
   return {
     loading: dq.isLoading,
     error: dq.error,
@@ -33,7 +31,6 @@ export function useTravelStats() {
     unescoTotal: uq.data?.filter((s) => s.list_status === "inscribed").length ?? 0,
     wondersCompleted: wq.data?.filter((w) => w.status === "completed").length ?? 0,
     wondersTotal: wq.data?.length ?? 0,
-    counting: cq.data,
   };
 }
 
@@ -44,7 +41,6 @@ export function StatsGrid({ compact = false }: { compact?: boolean }) {
   const ic = "h-4 w-4";
   const tiles = [
     { icon: <Globe2 className={ic} />, value: v(s.stats?.countriesVisited), label: "Countries visited", sub: "Every separately flagged destination counts" },
-    { icon: <MapPin className={ic} />, value: v(s.stats?.destinationsTracked), label: "Places explored", sub: "Each destination counted individually" },
     { icon: <Compass className={ic} />, value: v(s.stats?.continents.length), label: "Continents explored" },
     { icon: <Plane className={ic} />, value: v(s.trips), label: "Recorded trips" },
     { icon: <Landmark className={ic} />, value: v(s.unescoVisited), label: "UNESCO sites visited", sub: `of ${s.unescoTotal} recorded` },
