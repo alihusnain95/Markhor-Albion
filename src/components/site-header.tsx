@@ -12,7 +12,7 @@ import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, C
 /** Every page on the site — used by the footer and the command palette. */
 export const NAV = [
   { to: "/", label: "Home" },
-  { to: "/my-world", label: "Map" },
+  { to: "/my-world", label: "My World" },
   { to: "/passport", label: "Travel Timeline" },
   { to: "/journal", label: "Diaries" },
   { to: "/next-adventure", label: "Next Adventure" },
@@ -26,7 +26,7 @@ const REFLECTIONS = "Personal reflections";
 
 const HEADER = [
   { to: "/", label: "Home", exact: true },
-  { to: "/my-world", label: "Map", exact: false },
+  { to: "/my-world", label: "My World", exact: false },
   { to: "/passport", label: "Travel Timeline", exact: false },
   { to: "/journal", label: "Diaries", exact: false },
 ] as const;
