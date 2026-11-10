@@ -11,6 +11,7 @@ export interface StatDestination {
   visit_count: number | null;
 }
 
+/** Legacy settings are retained for compatibility with existing saved settings. */
 export interface CountingSettings {
   count_disputed_as_sovereign: boolean;
   count_uk_via_constituents: boolean;
@@ -22,9 +23,7 @@ export const DEFAULT_COUNTING: CountingSettings = {
 };
 
 export interface TravelStats {
-  sovereign: number;
-  constituentAndTerritories: number;
-  otherTracked: number;
+  countriesVisited: number;
   destinationsTracked: number;
   continents: string[];
   planned: number;
@@ -32,40 +31,17 @@ export interface TravelStats {
   knownVisitTotal: number;
 }
 
-const SUBNATIONAL: DestinationType[] = ["constituent", "territory", "sar"];
-
-/** Every figure is derived from records; nothing is assumed. Each destination is counted once. */
+/** Every separately flagged destination is one country in this personal travel count. */
 export function computeTravelStats(
   destinations: StatDestination[],
-  settings: CountingSettings = DEFAULT_COUNTING,
+  _settings: CountingSettings = DEFAULT_COUNTING,
 ): TravelStats {
   const unique = new Map(destinations.map((d) => [d.id, d]));
   const all = [...unique.values()];
   const visited = all.filter((d) => d.status === "visited");
 
-  const sovereignIds = new Set(
-    visited
-      .filter((d) => d.type === "sovereign" || (settings.count_disputed_as_sovereign && d.type === "disputed"))
-      .map((d) => d.id),
-  );
-  if (settings.count_uk_via_constituents) {
-    for (const d of visited) {
-      if (d.type === "constituent" && d.parent_id) {
-        const parent = unique.get(d.parent_id);
-        if (parent && parent.type === "sovereign") sovereignIds.add(parent.id);
-      }
-    }
-  }
-
-  const constituentAndTerritories = visited.filter((d) => SUBNATIONAL.includes(d.type)).length;
-  const otherTracked = visited.filter(
-    (d) => d.type === "other" || (d.type === "disputed" && !settings.count_disputed_as_sovereign),
-  ).length;
-
   return {
-    sovereign: sovereignIds.size,
-    constituentAndTerritories,
-    otherTracked,
+    countriesVisited: visited.length,
     destinationsTracked: visited.length,
     continents: [...new Set(visited.map((d) => d.continent).filter((c): c is string => !!c))].sort(),
     planned: all.filter((d) => d.status === "planned").length,
