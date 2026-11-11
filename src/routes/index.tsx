@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { HomeTop } from "@/components/home-top";
-import { destinationsQuery, plansQuery, tripsQuery } from "@/lib/queries";
+import { destinationsQuery, publicPlansQuery, tripsQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const dests = useQuery(destinationsQuery).data ?? [];
-  const plans = useQuery(plansQuery).data ?? [];
+  const plans = useQuery(publicPlansQuery).data ?? [];
   const trips = useQuery(tripsQuery).data ?? [];
   const upcoming = plans.filter((p) => p.status !== "completed");
 
