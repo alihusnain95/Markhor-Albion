@@ -66,6 +66,8 @@ function Passport() {
         { date: "2023-03-01", label: "March 2023", cities: ["Riga"] },
       ] : destination.slug === "estonia" ? [
         { date: "2025-02-01", label: "February 2025", cities: ["Tallinn"] },
+      ] : destination.slug === "isle-of-man" ? [
+        { date: "2016-04-01", label: "April 2016", cities: [] },
       ] : [];
       const historicalRows = historicalVisits
         .filter((visit) => !linkedTrips.some((trip) =>
