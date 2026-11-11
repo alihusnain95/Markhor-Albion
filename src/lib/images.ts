@@ -72,6 +72,7 @@ export const PAKISTAN_IMAGES: Record<string, string> = {
 };
 
 export function flagUrl(iso2: string | null | undefined, slug?: string) {
+  if (slug === "azad-kashmir") return "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Azad_Kashmir.svg";
   const sub: Record<string, string> = { england: "gb-eng", scotland: "gb-sct", wales: "gb-wls", "northern-ireland": "gb-nir" };
   const code = (slug && sub[slug]) || iso2?.toLowerCase();
   return code ? `https://flagcdn.com/w160/${code}.png` : null;
