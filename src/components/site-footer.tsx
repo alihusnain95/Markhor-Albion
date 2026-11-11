@@ -49,12 +49,6 @@ export function SiteFooter() {
             {social?.["email"] ? (
               <li><a href={`mailto:${social["email"]}`} className="text-muted-foreground hover:text-foreground">Contact</a></li>
             ) : null}
-            <li className="pt-4">
-              <p className="eyebrow mb-3">Charities &amp; Causes</p>
-              <a href="https://www.redcross.org.uk/get-involved/donate" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">
-                British Red Cross
-              </a>
-            </li>
             {links.length === 0 && !social?.["email"] && (
               <li className="text-muted-foreground/70">Social links and contact details can be added from the admin dashboard.</li>
             )}
