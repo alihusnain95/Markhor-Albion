@@ -147,17 +147,18 @@ export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]
           )}
         </Panel>
 
-        <Panel className="relative overflow-hidden">
-          <Link to="/my-world" aria-label="Open the interactive world map">
-            <WorldMap destinations={dests} interactive={false} arcs={arcs} pins={pins} className="aspect-[16/10] w-full" />
-          </Link>
-          <div className="absolute bottom-4 left-20 flex gap-8 text-xs">
-            <div><p className="font-serif text-2xl">{stats?.sovereign ?? "—"}</p><p className="text-[0.6rem] uppercase tracking-widest text-muted-foreground">Countries visited</p></div>
-            <div><p className="font-serif text-2xl">{pins.filter((p) => p.tone === "planned").length}</p><p className="text-[0.6rem] uppercase tracking-widest text-muted-foreground">Upcoming destinations</p></div>
-            <div><p className="font-serif text-2xl">∞</p><p className="text-[0.6rem] uppercase tracking-widest text-muted-foreground">Places to explore</p></div>
-          </div>
-        </Panel>
-        <div className="container-page -mt-2">
+        <div className="min-w-0 space-y-2">
+          <Panel className="relative overflow-hidden">
+            <Link to="/my-world" aria-label="Open the interactive world map">
+              <WorldMap destinations={dests} interactive={false} arcs={arcs} pins={pins} className="aspect-[16/10] w-full" />
+            </Link>
+            <Compass className="absolute bottom-4 left-4 h-10 w-10 text-muted-foreground/60" />
+            <div className="absolute bottom-4 left-20 flex gap-8 text-xs">
+              <div><p className="font-serif text-2xl">{stats?.sovereign ?? "—"}</p><p className="text-[0.6rem] uppercase tracking-widest text-muted-foreground">Countries visited</p></div>
+              <div><p className="font-serif text-2xl">{pins.filter((p) => p.tone === "planned").length}</p><p className="text-[0.6rem] uppercase tracking-widest text-muted-foreground">Upcoming destinations</p></div>
+              <div><p className="font-serif text-2xl">∞</p><p className="text-[0.6rem] uppercase tracking-widest text-muted-foreground">Places to explore</p></div>
+            </div>
+          </Panel>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-lg border border-border bg-card/90 px-4 py-3 text-[0.65rem] backdrop-blur-md">
             <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
               <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full border-2 border-primary bg-primary/50" />Visited</li>
@@ -167,15 +168,6 @@ export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]
             </ul>
           </div>
         </div>
-
-        <Panel className="p-5">
-          <Compass className="absolute bottom-4 left-4 h-10 w-10 text-muted-foreground/60" />
-          <div className="absolute bottom-4 left-20 flex gap-8 text-xs">
-            <div><p className="font-serif text-2xl">{stats?.sovereign ?? "—"}</p><p className="text-[0.6rem] uppercase tracking-widest text-muted-foreground">Countries visited</p></div>
-            <div><p className="font-serif text-2xl">{pins.filter((p) => p.tone === "planned").length}</p><p className="text-[0.6rem] uppercase tracking-widest text-muted-foreground">Upcoming destinations</p></div>
-            <div><p className="font-serif text-2xl">∞</p><p className="text-[0.6rem] uppercase tracking-widest text-muted-foreground">Places to explore</p></div>
-          </div>
-        </Panel>
 
         <Panel className="p-5">
           <div className="flex items-center justify-between">
