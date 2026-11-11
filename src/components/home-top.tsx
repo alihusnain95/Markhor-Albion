@@ -151,20 +151,24 @@ export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]
           <Link to="/my-world" aria-label="Open the interactive world map">
             <WorldMap destinations={dests} interactive={false} arcs={arcs} pins={pins} className="aspect-[16/10] w-full" />
           </Link>
-          <div className="absolute bottom-4 left-4 rounded-lg border border-border/70 bg-background/85 p-3 text-[0.65rem] backdrop-blur-md">
-            <p className="mb-2 font-bold uppercase tracking-[0.16em]">My travel map</p>
-            <ul className="space-y-1.5">
+          <div className="absolute bottom-4 left-20 flex gap-8 text-xs">
+            <div><p className="font-serif text-2xl">{stats?.sovereign ?? "—"}</p><p className="text-[0.6rem] uppercase tracking-widest text-muted-foreground">Countries visited</p></div>
+            <div><p className="font-serif text-2xl">{pins.filter((p) => p.tone === "planned").length}</p><p className="text-[0.6rem] uppercase tracking-widest text-muted-foreground">Upcoming destinations</p></div>
+            <div><p className="font-serif text-2xl">∞</p><p className="text-[0.6rem] uppercase tracking-widest text-muted-foreground">Places to explore</p></div>
+          </div>
+        </Panel>
+        <div className="container-page -mt-2">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-lg border border-border bg-card/90 px-4 py-3 text-[0.65rem] backdrop-blur-md">
+            <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
               <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full border-2 border-primary bg-primary/50" />Visited</li>
               <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full border-2 border-planned bg-planned/50" />Upcoming</li>
               <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full border-2 border-muted-foreground/70 bg-unvisited" />Planning</li>
               <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full border-2 border-dashed border-ice bg-transparent" />Needs confirmation</li>
             </ul>
-            <div className="relative mt-3">
-              <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search country…" aria-label="Search country" className="w-40 rounded-full border border-border bg-background px-3 py-1.5 pr-7 text-[0.65rem] outline-none focus:border-primary" />
-              <Search className="pointer-events-none absolute right-2 top-2 h-3 w-3 text-muted-foreground" />
-              {match.length > 0 && <ul className="absolute inset-x-0 top-full z-20 mt-1 overflow-hidden rounded-lg border border-border bg-popover text-sm">{match.map((d) => <li key={d.id}><Link to="/destinations/$slug" params={{ slug: d.slug }} className="block px-3 py-2 hover:bg-accent">{d.name}</Link></li>)}</ul>}
-            </div>
           </div>
+        </div>
+
+        <Panel className="p-5">
           <Compass className="absolute bottom-4 left-4 h-10 w-10 text-muted-foreground/60" />
           <div className="absolute bottom-4 left-20 flex gap-8 text-xs">
             <div><p className="font-serif text-2xl">{stats?.sovereign ?? "—"}</p><p className="text-[0.6rem] uppercase tracking-widest text-muted-foreground">Countries visited</p></div>
