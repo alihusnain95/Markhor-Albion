@@ -151,7 +151,7 @@ export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]
           <Link to="/my-world" aria-label="Open the interactive world map">
             <WorldMap destinations={dests} interactive={false} arcs={arcs} pins={pins} className="aspect-[16/10] w-full" />
           </Link>
-          <div className="absolute left-4 top-4 rounded-lg border border-border/70 bg-background/85 p-3 text-[0.65rem] backdrop-blur-md">
+          <div className="absolute bottom-4 left-4 rounded-lg border border-border/70 bg-background/85 p-3 text-[0.65rem] backdrop-blur-md">
             <p className="mb-2 font-bold uppercase tracking-[0.16em]">My travel map</p>
             <ul className="space-y-1.5">
               <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full border-2 border-primary bg-primary/50" />Visited</li>
