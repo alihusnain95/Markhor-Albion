@@ -7,13 +7,13 @@ import { Chips, PageTitle, SearchBox, Select } from "@/components/ui-kit";
 import { articlesQuery } from "@/lib/queries";
 import { readingTime } from "@/lib/stats";
 
-export const ARTICLE_CATEGORIES = ["Travel stories", "City guides", "Culture", "Food", "Architecture", "Adventure", "Transport", "Budget travel", "Hidden gems", "Travel tips", "Personal reflections", "Lifestyle", "Experiences and ambitions"];
+export const ARTICLE_CATEGORIES = ["City guides", "Architecture", "Adventure", "Documentaries", "Podcasts", "Hidden gems", "Travel tips", "Personal reflections", "Lifestyle", "Experiences and ambitions"];
 
 export const Route = createFileRoute("/journal/")({
   head: () => ({
     meta: [
       { title: "The Journal — Travel Stories | Markhor Albion" },
-      { name: "description", content: "Travel stories, city guides and reflections from the road." },
+      { name: "description", content: "City guides, documentaries, podcasts and stories from beyond the map." },
       { property: "og:title", content: "The Journal | Markhor Albion" },
       { property: "og:description", content: "Stories, guides and reflections from Markhor Albion." },
       { property: "og:type", content: "website" },
@@ -45,7 +45,7 @@ function Journal() {
 
   return (
     <>
-      <PageTitle title="The Journal" intro="Travel stories, guides, experiences and reflections from around the world." />
+      <PageTitle title="The Journal" intro="Explore city guides, documentaries, podcasts and experiences from around the world." />
       <div className="container-page grid gap-6 pb-10 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="min-w-0 space-y-4">
           <Chips value={cat} onChange={setCat} options={[{ value: "all", label: "All" }, ...shownCats.map((c) => ({ value: c, label: c }))]} />
