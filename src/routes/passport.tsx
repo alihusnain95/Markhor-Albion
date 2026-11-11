@@ -51,7 +51,7 @@ function Passport() {
     })
     .filter((entry) => `${entry.destination.name} ${entry.cities.join(" ")} ${entry.tripTitle ?? ""}`.toLowerCase().includes(q.trim().toLowerCase()))
     .sort((a, b) => {
-      if (a.firstDate && b.firstDate) return a.firstDate.localeCompare(b.firstDate);
+      if (a.firstDate && b.firstDate) return b.firstDate.localeCompare(a.firstDate);
       if (a.firstDate) return -1;
       if (b.firstDate) return 1;
       return a.destination.name.localeCompare(b.destination.name);
@@ -62,7 +62,7 @@ function Passport() {
 
   return (
     <>
-      <PageTitle title="Travel Timeline" intro="Every country travelled, from the earliest recorded journey to the latest — all in one place." />
+      <PageTitle title="Travel Timeline" intro="Every country travelled, with your latest journeys first — all in one place." />
       <section className="container-page space-y-6 pb-12">
         <StatsGrid compact />
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -83,26 +83,31 @@ function Passport() {
           </div>
         ) : (
           <div className="max-h-[72vh] overflow-y-auto overscroll-contain rounded-xl border border-border bg-card/80 p-4 pr-2 sm:p-5">
-            <ol className="relative space-y-4 border-l border-border pl-4 sm:pl-5">
+            <ol className="relative space-y-3 border-l border-border pl-4 sm:space-y-4 sm:pl-5">
               {entries.map(({ destination, firstDate, lastDate, tripTitle, cities, image }) => (
-                <li key={destination.id} className="relative flex min-w-0 items-center gap-2.5 pr-2 sm:gap-4">
-                  <span className="absolute -left-[1.38rem] top-3 h-2.5 w-2.5 rounded-full border-2 border-primary bg-background sm:-left-[1.6rem]" />
-                  <span className="w-[5.5rem] shrink-0 text-[0.6rem] uppercase leading-tight tracking-wide text-muted-foreground sm:w-28 sm:text-[0.65rem]">{dateLabel(firstDate, lastDate)}</span>
-                  {image ? <img src={image} alt="" loading="lazy" className="h-9 w-12 shrink-0 rounded object-cover sm:h-10 sm:w-14" /> : <span className="h-9 w-12 shrink-0 rounded bg-muted sm:h-10 sm:w-14" />}
+                <li key={destination.id} className="relative flex min-w-0 items-center gap-3 rounded-lg px-2 py-2.5 transition-colors hover:bg-muted/40 sm:gap-4 sm:px-3">
+                  <span className="absolute -left-[1.38rem] top-5 h-2.5 w-2.5 rounded-full border-2 border-primary bg-background sm:-left-[1.6rem]" />
+                  <span className="w-[5.25rem] shrink-0 text-[0.6rem] font-medium uppercase leading-tight tracking-wide text-muted-foreground sm:w-28 sm:text-[0.65rem]">{dateLabel(firstDate, lastDate)}</span>
+                  {image ? <img src={image} alt="" loading="lazy" className="h-10 w-14 shrink-0 rounded-md object-cover sm:h-12 sm:w-16" /> : <span className="h-10 w-14 shrink-0 rounded-md bg-muted sm:h-12 sm:w-16" />}
                   <span className="min-w-0 flex-1">
-                    <span className="flex min-w-0 items-center gap-2 text-xs font-semibold sm:text-sm">
+                    <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
                       <Flag iso2={destination.iso2} slug={destination.slug} emoji={destination.flag} className="h-3.5 w-5 shrink-0 rounded-[2px]" />
-                      <span className="truncate">{destination.name}</span>
+                      <span className="text-sm font-semibold text-foreground sm:text-base">{destination.name}</span>
+                      {cities.length > 0 && (
+                        <>
+                          <span className="text-muted-foreground/60">·</span>
+                          <span className="text-xs text-muted-foreground sm:text-sm">{cities.join(" · ")}</span>
+                        </>
+                      )}
                     </span>
-                    <span className="mt-0.5 block truncate text-[0.62rem] text-muted-foreground sm:text-[0.68rem]">{tripTitle ?? "Travel date not linked to a recorded trip"}{cities.length ? ` · ${cities.join(" · ")}` : ""}</span>
+                    {tripTitle && <span className="mt-1 block truncate text-[0.65rem] text-muted-foreground/80 sm:text-xs">{tripTitle}</span>}
                   </span>
-                  <span className="shrink-0 rounded-full border border-primary/40 bg-primary/10 px-2 py-1 text-[0.6rem] font-semibold text-primary sm:px-2.5 sm:text-[0.65rem]">Visited</span>
                 </li>
               ))}
             </ol>
           </div>
         )}
-        <p className="text-xs text-muted-foreground">Countries with recorded trip dates are shown in chronological order. Visited countries without linked trip dates are included at the end; their exact historical position needs a travel date to be recorded.</p>
+        <p className="text-xs text-muted-foreground">Latest recorded journeys appear first. Visited countries without linked trip dates are included after dated entries.</p>
       </section>
     </>
   );
