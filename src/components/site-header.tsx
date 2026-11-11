@@ -82,6 +82,7 @@ function SiteSearch({ open, setOpen }: { open: boolean; setOpen: (v: boolean) =>
 
 function TripAlerts() {
   const { data: plans = [] } = useQuery(plansQuery);
+  const { data: destinations = [] } = useQuery(destinationsQuery);
   const upcoming = plans.filter((p) => p.intended_start && new Date(p.intended_start) >= new Date("2026-01-01")).slice(0, 4);
   const fmt = (d: string) => new Date(d + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short" }).toUpperCase();
   return (
@@ -98,7 +99,7 @@ function TripAlerts() {
           <ul className="mt-3 space-y-3">
             {upcoming.map((p) => (
               <li key={p.id} className="flex items-baseline justify-between gap-3 text-xs">
-                <span className="truncate font-medium">{p.title}</span>
+                <span className="truncate font-medium">{destinations.find((d) => d.id === p.destination_id)?.name ?? p.title}</span>
                 <span className="shrink-0 tracking-widest text-muted-foreground">{fmt(p.intended_start!)}</span>
               </li>
             ))}
