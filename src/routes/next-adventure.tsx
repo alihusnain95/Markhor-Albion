@@ -58,10 +58,9 @@ function Next() {
                       {days && <span className="absolute right-3 top-3 rounded-full bg-background/80 px-2.5 py-1 text-xs text-ice backdrop-blur">{days} days to go</span>}
                     </div>
                     <div className="p-4">
-                      <p className="font-semibold">{p.title}</p>
+                      <p className="font-semibold">{d?.name ?? p.title}</p>
                       <p className="mt-0.5 text-xs text-muted-foreground">{d?.name}{p.intended_start && ` · ${fmt(p.intended_start)}`}{p.intended_end && ` – ${fmt(p.intended_end)}`}</p>
                       <span className="mt-3 inline-block rounded-full border border-planned/50 bg-planned/20 px-2.5 py-0.5 text-[0.68rem] font-semibold text-planned">{PLAN_LABEL[p.status]}</span>
-                      {p.goals && <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">{p.goals}</p>}
                     </div>
                   </div>
                 );
