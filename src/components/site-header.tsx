@@ -16,7 +16,7 @@ export const NAV = [
   { to: "/my-world", label: "My World" },
   { to: "/passport", label: "Travel Timeline" },
   { to: "/gallery", label: "Beyond Travel" },
-  { to: "/journal", label: "Articles" },
+  { to: "/journal", label: "Journal" },
   { to: "/podcasts", label: "Podcasts" },
   { to: "/next-adventure", label: "Next Adventure" },
   { to: "/wonders", label: "Wonders" },
@@ -29,7 +29,6 @@ const HEADER = [
   { to: "/", label: "Home", exact: true },
   { to: "/my-world", label: "My World", exact: false },
   { to: "/passport", label: "Travel Timeline", exact: false },
-  { to: "/journal", label: "Diaries", exact: false },
 ] as const;
 
 function linkCls(active: boolean) {
@@ -164,10 +163,10 @@ export function SiteHeader() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="border-border bg-popover text-popover-foreground">
               <DropdownMenuItem asChild><Link to="/gallery">Explore Beyond Travel</Link></DropdownMenuItem>
-              <DropdownMenuItem asChild><Link to="/journal">Articles</Link></DropdownMenuItem>
-              <DropdownMenuItem asChild><Link to="/podcasts">Podcasts</Link></DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <Link to="/journal" className={linkCls(isActive("/journal", false))}>Journal</Link>
+          <Link to="/podcasts" className={linkCls(isActive("/podcasts", false))}>Podcasts</Link>
           <Link to="/about" className={linkCls(isActive("/about", false))}>About</Link>
         </nav>
 
@@ -207,7 +206,7 @@ export function SiteHeader() {
             </button>
           </div>
           <nav aria-label="Mobile" className="flex flex-col px-6 py-4">
-            {NAV.filter((n) => !["/journal", "/podcasts"].includes(n.to)).map((n) => (
+            {NAV.map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
