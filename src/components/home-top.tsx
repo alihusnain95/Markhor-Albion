@@ -161,7 +161,7 @@ export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]
           </Panel>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-lg border border-border bg-card/90 px-4 py-3 text-[0.65rem] backdrop-blur-md">
             <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
-              <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full border-2 border-primary bg-primary/50" />Visited</li>
+              <li className="flex items-center gap-2"><span className="h-3 w-3 rounded-sm border border-primary bg-primary" />Countries visited</li>
               <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full border-2 border-planned bg-planned/50" />Upcoming</li>
               <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full border-2 border-muted-foreground/70 bg-unvisited" />Planning</li>
               <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full border-2 border-dashed border-ice bg-transparent" />Needs confirmation</li>
