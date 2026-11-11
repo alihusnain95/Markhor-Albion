@@ -99,7 +99,7 @@ function TripAlerts() {
           <ul className="mt-3 space-y-3">
             {upcoming.map((p) => (
               <li key={p.id} className="flex items-baseline justify-between gap-3 text-xs">
-                <span className="truncate font-medium">{destinations.find((d) => d.id === p.destination_id)?.name ?? "Upcoming destination"}</span>
+                <span className="truncate font-medium">{p.destination_label}</span>
                 <span className="shrink-0 tracking-widest text-muted-foreground">{fmt(p.intended_start!)}</span>
               </li>
             ))}
