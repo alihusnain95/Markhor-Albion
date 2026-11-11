@@ -45,7 +45,7 @@ function Journal() {
 
   return (
     <>
-      <PageTitle title="The Journal" intro="Explore city guides, documentaries, podcasts and experiences from around the world." />
+      <PageTitle title="The Journal" intro="Explore city guides, documentaries, podcasts and experiences from around the world. Select Podcasts here to explore audio content." />
       <div className="container-page grid gap-6 pb-10 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="min-w-0 space-y-4">
           <Chips value={cat} onChange={setCat} options={[{ value: "all", label: "All" }, ...shownCats.map((c) => ({ value: c, label: c }))]} />
