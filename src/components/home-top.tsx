@@ -39,7 +39,7 @@ export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]
   const { stats } = useTravelStats();
   const [q, setQ] = useState("");
   const byId = (id: string | null) => dests.find((d) => d.id === id) ?? null;
-  const ordered = plans.filter((p) => p.intended_start).sort((a, b) => (a.intended_start! < b.intended_start! ? -1 : 1));
+  const ordered = plans;
   const next = ordered[0];
   const recent = [...trips].filter((t) => t.start_date).sort((a, b) => (a.start_date! < b.start_date! ? 1 : -1)).slice(0, 6);
   const nextDest = next ? byId(next.destination_id) : null;
