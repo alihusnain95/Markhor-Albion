@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Instagram } from "lucide-react";
+import { Instagram, Youtube } from "lucide-react";
 import { settingQuery } from "@/lib/queries";
 import { useAuth } from "@/hooks/use-auth";
 import { NAV } from "./site-header";
@@ -10,7 +10,7 @@ export function SiteFooter() {
   const { data: social } = useQuery(settingQuery("social"));
   const links = [
     { label: "Instagram", url: "https://www.instagram.com/alihusnain95/" },
-    { label: "YouTube", url: social?.["youtube"] },
+    { label: "YouTube", url: "https://www.youtube.com/@markhor_albion" },
     { label: "X", url: social?.["x"] },
   ].filter((l) => !!l.url);
 
@@ -41,6 +41,7 @@ export function SiteFooter() {
               <li key={l.label}>
                 <a href={l.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground">
                   {l.label === "Instagram" ? <Instagram size={16} aria-hidden="true" /> : null}
+                  {l.label === "YouTube" ? <Youtube size={16} aria-hidden="true" /> : null}
                   {l.label}
                 </a>
               </li>
