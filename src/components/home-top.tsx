@@ -41,6 +41,23 @@ export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]
   const byId = (id: string | null) => dests.find((d) => d.id === id) ?? null;
   const ordered = plans;
   const next = ordered[0];
+  const upcomingCountries = (() => {
+    const countryForSlug: Record<string, string> = {
+      shanghai: "China", beijing: "China",
+      lahore: "Pakistan", faisalabad: "Pakistan", kartarpur: "Pakistan",
+      "hong-kong": "Hong Kong", macau: "Macau", "saudi-arabia": "Saudi Arabia",
+    };
+    const grouped = new Map<string, { label: string; date: string | null; destination: DestinationWithVisit | null }>();
+    for (const p of ordered) {
+      const d = byId(p.destination_id);
+      const label = (d && countryForSlug[d.slug]) || d?.name || p.destination_label || p.title;
+      const date = p.intended_start;
+      const monthYear = date ? new Date(date + "T00:00:00").toLocaleDateString("en-GB", { month: "long", year: "numeric" }) : "Date to be confirmed";
+      const key = label + "|" + monthYear;
+      if (!grouped.has(key)) grouped.set(key, { label, date, destination: d });
+    }
+    return [...grouped.values()].sort((a, b) => (a.date ?? "9999").localeCompare(b.date ?? "9999"));
+  })();
   const recent = [...trips].filter((t) => t.start_date).sort((a, b) => (a.start_date! < b.start_date! ? 1 : -1)).slice(0, 6);
   const nextDest = next ? byId(next.destination_id) : null;
   const featured = FEATURED.map((s) => dests.find((d) => d.slug === s)).filter(Boolean) as DestinationWithVisit[];
@@ -178,20 +195,20 @@ export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]
             <p className="mt-6 text-sm text-muted-foreground">No upcoming trips are published yet. Plans appear here once they're made public from the admin dashboard.</p>
           ) : (
             <ol className="relative mt-5 space-y-4 border-l border-border pl-5">
-              {ordered.slice(0, 7).map((p) => {
-                const d = byId(p.destination_id);
-                const img = d ? DESTINATION_IMAGES[d.slug] : null;
+              {upcomingCountries.slice(0, 7).map((item) => {
+                const img = item.destination ? DESTINATION_IMAGES[item.destination.slug] : null;
+                const monthYear = item.date ? new Date(item.date + "T00:00:00").toLocaleDateString("en-GB", { month: "long", year: "numeric" }).toUpperCase() : "DATE TBC";
                 return (
-                  <li key={p.id} className="relative flex gap-3">
+                  <li key={item.label + monthYear} className="relative flex gap-3">
                     <span className="absolute -left-[1.6rem] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-primary bg-background" />
-                    <span className="w-20 shrink-0 text-[0.65rem] uppercase leading-tight text-muted-foreground">{fmtRange(p.intended_start, p.intended_end)}</span>
+                    <span className="w-20 shrink-0 text-[0.65rem] uppercase leading-tight text-muted-foreground">{monthYear}</span>
                     {img ? (
                       <img src={img} alt="" loading="lazy" className="h-9 w-14 shrink-0 rounded object-cover" />
                     ) : (
                       <span className="flex h-9 w-14 shrink-0 items-center justify-center rounded bg-muted text-muted-foreground"><Images className="h-3.5 w-3.5" /></span>
                     )}
                     <span className="min-w-0 text-xs">
-                      <span className="block font-semibold">{d?.name ?? p.title}</span>
+                      <span className="block font-semibold">{item.label}</span>
                     </span>
                   </li>
                 );
