@@ -29,6 +29,7 @@ function thumbOf(m: MediaItem) {
 function Gallery() {
   const { data: media = [], isLoading } = useQuery(mediaQuery);
   const { data: dests = [] } = useQuery(destinationsQuery);
+  const [category, setCategory] = useState("all");
   const [album, setAlbum] = useState("all");
   const [country, setCountry] = useState("all");
   const [kind, setKind] = useState("all");
@@ -36,7 +37,9 @@ function Gallery() {
 
   const albums = useMemo(() => [...new Set(media.map((m) => m.album).filter(Boolean) as string[])].sort(), [media]);
   const countries = useMemo(() => dests.filter((d) => media.some((m) => m.destination_id === d.id)), [dests, media]);
+  const categories = ["Polo", "Golf", "Horse Races", "Dancing", "Squash", "Motorcycling", "Equestrian", "Festivals"];
   const list = media.filter((m) =>
+    (category === "all" || (m.album ?? "").toLowerCase() === category.toLowerCase()) &&
     (album === "all" || m.album === album) &&
     (country === "all" || m.destination_id === country) &&
     (kind === "all" || (kind === "photo" ? m.kind === "photo" : m.kind !== "photo")));
@@ -78,7 +81,12 @@ function Gallery() {
         </section>
       )}
 
-      <section className="container-page mt-10 flex flex-wrap items-center gap-2">
+      <section className="container-page mt-10 space-y-4">
+        <div className="flex flex-wrap items-center gap-2" aria-label="Beyond Travel categories">
+          <button className={pill(category === "all")} onClick={() => { setCategory("all"); setAlbum("all"); }}>All</button>
+          {categories.map((c) => <button key={c} className={pill(category === c)} onClick={() => { setCategory(c); setAlbum("all"); }}>{c}</button>)}
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
         <button className={pill(album === "all")} onClick={() => setAlbum("all")}>All albums</button>
         {albums.map((a) => <button key={a} className={pill(album === a)} onClick={() => setAlbum(a)}>{a}</button>)}
         <span className="mx-2 hidden h-5 w-px bg-border sm:block" />
@@ -89,6 +97,7 @@ function Gallery() {
         <select aria-label="Filter by type" value={kind} onChange={(e) => setKind(e.target.value)} className="h-9 rounded-full border border-border bg-background px-4 text-xs">
           <option value="all">Photos &amp; videos</option><option value="photo">Photos</option><option value="video">Videos</option>
         </select>
+        </div>
       </section>
 
       <section className="container-page mt-8">
