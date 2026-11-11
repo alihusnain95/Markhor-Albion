@@ -99,6 +99,15 @@ export const tripsQuery = queryOptions({
   },
 });
 
+export type PublicPlannedTrip = Pick<PlannedTrip, "id" | "destination_id" | "intended_start" | "intended_end" | "status">;
+
+export const publicPlansQuery = queryOptions({
+  queryKey: ["public_planned_trips"],
+  queryFn: async (): Promise<PublicPlannedTrip[]> =>
+    must(await (supabase as any).from("public_planned_trips").select("id,destination_id,intended_start,intended_end,status").order("intended_start", { nullsFirst: false })),
+});
+
+// Full itinerary fields are reserved for the authenticated admin dashboard.
 export const plansQuery = queryOptions({
   queryKey: ["planned_trips"],
   queryFn: async () => must(await supabase.from("planned_trips").select("*").order("intended_start", { nullsFirst: false })),
