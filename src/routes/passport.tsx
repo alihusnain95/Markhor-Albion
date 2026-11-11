@@ -45,16 +45,17 @@ function Passport() {
         image: DESTINATION_IMAGES[destination.slug],
         key: `${destination.id}-${trip.id}`,
       }));
-      // Historical Poland visits supplied separately from the country-wide city list.
-      // Do not duplicate them if a matching dated trip is already recorded.
-      const polandVisits = destination.slug === "poland" ? [
+      // Historical visits recorded directly while the full country profile retains all cities.
+      const historicalVisits = destination.slug === "poland" ? [
         { date: "2023-06-01", label: "June 2023", cities: ["Rzeszów"] },
         { date: "2022-07-01", label: "July 2022", cities: ["Warsaw"] },
         { date: "2022-05-01", label: "May 2022", cities: ["Warsaw"] },
         { date: "2020-01-01", label: "2020", cities: ["Kraków", "Zakopane"] },
         { date: "2015-01-01", label: "2015", cities: ["Kraków", "Katowice"] },
+      ] : destination.slug === "colombia" ? [
+        { date: "2024-09-01", label: "September 2024", cities: ["Guatapé"] },
       ] : [];
-      const historicalRows = polandVisits
+      const historicalRows = historicalVisits
         .filter((visit) => !linkedTrips.some((trip) =>
           trip.start_date?.slice(0, visit.label.length === 4 ? 4 : 7) === visit.date.slice(0, visit.label.length === 4 ? 4 : 7) &&
           visit.cities.every((city) => trip.cities.some((tripCity) => tripCity.toLowerCase() === city.toLowerCase()))
@@ -69,7 +70,7 @@ function Passport() {
           key: `${destination.id}-historical-${visit.date}`,
           dateOverride: visit.label,
         }));
-      if (destination.slug === "poland") return [...tripRows, ...historicalRows];
+      if (historicalVisits.length) return [...tripRows, ...historicalRows];
       return tripRows.length ? tripRows : [{
         destination, firstDate: null, lastDate: null, tripTitle: null,
         cities: [] as string[], image: DESTINATION_IMAGES[destination.slug],
