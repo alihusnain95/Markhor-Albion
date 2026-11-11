@@ -204,8 +204,7 @@ export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]
                       <span className="flex h-9 w-14 shrink-0 items-center justify-center rounded bg-muted text-muted-foreground"><Images className="h-3.5 w-3.5" /></span>
                     )}
                     <span className="min-w-0 text-xs">
-                      <span className="block font-semibold">{p.title}</span>
-                      {(p.itinerary || p.transport_notes) && <span className="block text-muted-foreground">{p.itinerary ?? p.transport_notes}</span>}
+                      <span className="block font-semibold">{d?.name ?? p.title}</span>
                     </span>
                   </li>
                 );
