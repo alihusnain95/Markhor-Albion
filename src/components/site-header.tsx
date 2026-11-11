@@ -146,7 +146,7 @@ export function SiteHeader() {
           <span className="flex flex-col leading-none">
             <span className="font-serif text-base tracking-[0.18em]">MARKHOR ALBION</span>
             <span className="mt-1 hidden text-[0.5rem] font-semibold uppercase tracking-[0.3em] text-muted-foreground sm:block">
-              Places · People · Purpose
+              Places · People · Adventures
             </span>
           </span>
         </Link>
