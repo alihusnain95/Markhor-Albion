@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Bell, Menu, Mountain, Search, User, X } from "lucide-react";
+import { Bell, Menu, Mountain, Search, User, X, Youtube } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 import { destinationsQuery, publicPlansQuery } from "@/lib/queries";
@@ -171,6 +171,15 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-1">
+          <a
+            href="https://www.youtube.com/@markhor_albion"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Markhor Albion on YouTube"
+            className="mr-1 hidden p-2 text-muted-foreground transition-colors hover:text-foreground lg:inline-flex"
+          >
+            <Youtube className="h-4 w-4" />
+          </a>
           <button
             onClick={() => setSearchOpen(true)}
             className="mr-2 hidden items-center gap-2 rounded-full border border-border bg-card/70 px-4 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary/60 hover:text-foreground lg:flex"
@@ -216,6 +225,14 @@ export function SiteHeader() {
                 {n.label}
               </Link>
             ))}
+            <a
+              href="https://www.youtube.com/@markhor_albion"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 border-b border-border py-3.5 font-serif text-xl text-muted-foreground hover:text-primary"
+            >
+              <Youtube className="h-5 w-5" /> YouTube
+            </a>
           </nav>
         </SheetContent>
       </Sheet>
