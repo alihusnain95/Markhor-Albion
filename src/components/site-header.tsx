@@ -17,7 +17,6 @@ export const NAV = [
   { to: "/passport", label: "Travel Timeline" },
   { to: "/gallery", label: "Beyond Travel" },
   { to: "/journal", label: "Journal" },
-  { to: "/podcasts", label: "Podcasts" },
   { to: "/next-adventure", label: "Next Adventure" },
   { to: "/wonders", label: "Wonders" },
   { to: "/unesco", label: "UNESCO" },
@@ -166,7 +165,6 @@ export function SiteHeader() {
             </DropdownMenuContent>
           </DropdownMenu>
           <Link to="/journal" className={linkCls(isActive("/journal", false))}>Journal</Link>
-          <Link to="/podcasts" className={linkCls(isActive("/podcasts", false))}>Podcasts</Link>
           <Link to="/about" className={linkCls(isActive("/about", false))}>About</Link>
         </nav>
 
