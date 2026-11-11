@@ -75,7 +75,7 @@ function Passport() {
       ] : destination.slug === "sweden" ? [
         { date: "2025-01-01", label: "January 2025", cities: ["Gothenburg"] },
       ] : destination.slug === "denmark" ? [
-        { date: "2025-01-01", label: "January 2025", cities: [] },
+        { date: "2025-01-01", label: "January 2025", cities: ["Copenhagen"] },
       ] : [];
       const historicalRows = historicalVisits
         .filter((visit) => !linkedTrips.some((trip) =>
