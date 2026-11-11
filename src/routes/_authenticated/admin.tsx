@@ -614,7 +614,7 @@ function PlansAdmin() {
       packing: packing.split(",").map((x) => x.trim()).filter(Boolean),
     };
     const ok = await run(p.id ? supabase.from("planned_trips").update(payload).eq("id", p.id) : supabase.from("planned_trips").insert(payload));
-    if (ok) { setP(blank); setPacking(""); refresh("planned_trips"); }
+    if (ok) { setP(blank); setPacking(""); refresh("planned_trips", "public_planned_trips"); }
   };
   const field = (k: keyof PlannedTrip, ph: string) => <Textarea placeholder={ph} value={(p[k] as string) ?? ""} onChange={(e) => setP({ ...p, [k]: e.target.value })} className="rounded-none" />;
   return (
@@ -639,7 +639,7 @@ function PlansAdmin() {
             <button className="text-left" onClick={() => { setP(x); setPacking(Array.isArray(x.packing) ? (x.packing as string[]).join(", ") : ""); }}>
               <p className="font-medium">{x.title}</p><p className="text-xs capitalize text-muted-foreground">{x.status} · {x.is_public ? "Public" : "Private"}</p>
             </button>
-            <Confirm label="Delete" what={x.title} onConfirm={async () => { if (await run(supabase.from("planned_trips").delete().eq("id", x.id), "Deleted")) refresh("planned_trips"); }} />
+            <Confirm label="Delete" what={x.title} onConfirm={async () => { if (await run(supabase.from("planned_trips").delete().eq("id", x.id), "Deleted")) refresh("planned_trips", "public_planned_trips"); }} />
           </li>
         ))}
         {data.length === 0 && <li className="py-3 text-sm text-muted-foreground">No plans yet.</li>}
