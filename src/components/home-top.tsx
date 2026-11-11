@@ -94,7 +94,7 @@ export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]
               <Plane className="h-4 w-4 -rotate-45 text-primary" />
               <span className="text-left leading-tight">
                 <span className="block text-[0.55rem] uppercase tracking-[0.3em] text-muted-foreground">Next destination</span>
-                <span className="block text-xs font-bold uppercase tracking-[0.18em]">{nextDest?.name ?? "Upcoming destination"}</span>
+                <span className="block text-xs font-bold uppercase tracking-[0.18em]">{next.destination_label}</span>
                 <span className="block text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground">{fmtDate(next.intended_start)}</span>
               </span>
             </Link>
