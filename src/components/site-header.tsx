@@ -3,7 +3,7 @@ import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Bell, Menu, Mountain, Search, User, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
-import { destinationsQuery, plansQuery } from "@/lib/queries";
+import { destinationsQuery, publicPlansQuery } from "@/lib/queries";
 import { useAuth } from "@/hooks/use-auth";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -81,7 +81,7 @@ function SiteSearch({ open, setOpen }: { open: boolean; setOpen: (v: boolean) =>
 }
 
 function TripAlerts() {
-  const { data: plans = [] } = useQuery(plansQuery);
+  const { data: plans = [] } = useQuery(publicPlansQuery);
   const { data: destinations = [] } = useQuery(destinationsQuery);
   const upcoming = plans.filter((p) => p.intended_start && new Date(p.intended_start) >= new Date("2026-01-01")).slice(0, 4);
   const fmt = (d: string) => new Date(d + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short" }).toUpperCase();
@@ -99,7 +99,7 @@ function TripAlerts() {
           <ul className="mt-3 space-y-3">
             {upcoming.map((p) => (
               <li key={p.id} className="flex items-baseline justify-between gap-3 text-xs">
-                <span className="truncate font-medium">{destinations.find((d) => d.id === p.destination_id)?.name ?? p.title}</span>
+                <span className="truncate font-medium">{destinations.find((d) => d.id === p.destination_id)?.name ?? "Upcoming destination"}</span>
                 <span className="shrink-0 tracking-widest text-muted-foreground">{fmt(p.intended_start!)}</span>
               </li>
             ))}
