@@ -18,6 +18,7 @@ import { Route as MyWorldRouteImport } from './routes/my-world'
 import { Route as NextAdventureRouteImport } from './routes/next-adventure'
 import { Route as Pakistan50WondersRouteImport } from './routes/pakistan-50-wonders'
 import { Route as PassportRouteImport } from './routes/passport'
+import { Route as PodcastsRouteImport } from './routes/podcasts'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
@@ -67,6 +68,11 @@ const NextAdventureRoute = NextAdventureRouteImport.update({
 const Pakistan50WondersRoute = Pakistan50WondersRouteImport.update({
   id: '/pakistan-50-wonders',
   path: '/pakistan-50-wonders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PodcastsRoute = PodcastsRouteImport.update({
+  id: '/podcasts',
+  path: '/podcasts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PassportRoute = PassportRouteImport.update({
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/my-world': typeof MyWorldRoute
   '/next-adventure': typeof NextAdventureRoute
   '/pakistan-50-wonders': typeof Pakistan50WondersRoute
+  '/podcasts': typeof PodcastsRoute
   '/passport': typeof PassportRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -205,6 +212,7 @@ export interface FileRouteTypes {
     | '/my-world'
     | '/next-adventure'
     | '/pakistan-50-wonders'
+    | '/podcasts'
     | '/passport'
     | '/privacy'
     | '/sitemap.xml'
