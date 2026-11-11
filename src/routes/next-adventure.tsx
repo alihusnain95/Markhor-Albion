@@ -54,12 +54,12 @@ function Next() {
                 return (
                   <div key={p.id} className="overflow-hidden rounded-lg border border-border bg-card">
                     <div className="relative aspect-[16/9]">
-                      {img ? <img src={img} alt={d?.name ?? "Upcoming destination"} loading="lazy" className="h-full w-full object-cover" /> : <div className="h-full w-full bg-gradient-to-br from-secondary to-background" />}
+                      {img ? <img src={img} alt={p.destination_label} loading="lazy" className="h-full w-full object-cover" /> : <div className="h-full w-full bg-gradient-to-br from-secondary to-background" />}
                       {days && <span className="absolute right-3 top-3 rounded-full bg-background/80 px-2.5 py-1 text-xs text-ice backdrop-blur">{days} days to go</span>}
                     </div>
                     <div className="p-4">
                       <p className="font-semibold">{d?.name ?? "Upcoming destination"}</p>
-                      <p className="mt-0.5 text-xs text-muted-foreground">{d?.name}{p.intended_start && ` · ${fmt(p.intended_start)}`}{p.intended_end && ` – ${fmt(p.intended_end)}`}</p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">{p.intended_start && ` · ${fmt(p.intended_start)}`}{p.intended_end && ` – ${fmt(p.intended_end)}`}</p>
                       <span className="mt-3 inline-block rounded-full border border-planned/50 bg-planned/20 px-2.5 py-0.5 text-[0.68rem] font-semibold text-planned">{PLAN_LABEL[p.status]}</span>
                     </div>
                   </div>
