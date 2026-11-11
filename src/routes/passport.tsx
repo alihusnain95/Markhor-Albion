@@ -11,9 +11,9 @@ export const Route = createFileRoute("/passport")({
   head: () => ({
     meta: [
       { title: "Travel Timeline | Markhor Albion" },
-      { name: "description", content: "A chronological record of journeys, dates, destinations and places explored." },
-      { property: "og:title", content: "My Travel Passport — Markhor Albion" },
-      { property: "og:description", content: "Every journey and destination in one chronological travel record." },
+      { name: "description", content: "A chronological record of every country and destination travelled." },
+      { property: "og:title", content: "My Travel Timeline — Markhor Albion" },
+      { property: "og:description", content: "Every journey and destination in chronological order." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -21,14 +21,9 @@ export const Route = createFileRoute("/passport")({
   component: Passport,
 });
 
-function monthYear(date: string | null) {
-  if (!date) return "Date to be confirmed";
-  return new Date(date + "T00:00:00").toLocaleDateString("en-GB", { month: "long", year: "numeric" });
-}
-
-function dateRange(start: string | null, end: string | null) {
-  if (!start) return "Dates to be confirmed";
-  const fmt = (value: string) => new Date(value + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+function dateLabel(start: string | null, end: string | null) {
+  if (!start) return "DATE TO BE CONFIRMED";
+  const fmt = (v: string) => new Date(v + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }).toUpperCase();
   return end && end !== start ? `${fmt(start)} – ${fmt(end)}` : fmt(start);
 }
 
@@ -37,83 +32,58 @@ function Passport() {
   const { data: trips = [], isLoading } = useQuery(tripsQuery);
   const [q, setQ] = useState("");
 
-  const timeline = useMemo(() => {
-    const matching = trips
-      .filter((trip) => {
-        const names = trip.destination_ids.map((id) => dests.find((d) => d.id === id)?.name ?? "").join(" ");
-        return `${trip.title} ${trip.cities.join(" ")} ${names}`.toLowerCase().includes(q.trim().toLowerCase());
-      })
-      .sort((a, b) => (b.start_date ?? "").localeCompare(a.start_date ?? ""));
-    const groups = new Map<string, typeof matching>();
-    for (const trip of matching) {
-      const key = monthYear(trip.start_date);
-      groups.set(key, [...(groups.get(key) ?? []), trip]);
-    }
-    return [...groups.entries()];
-  }, [trips, dests, q]);
+  const entries = useMemo(() => trips
+    .flatMap((trip) => trip.destination_ids.map((id, index) => {
+      const destination = dests.find((d) => d.id === id);
+      return destination ? { key: `${trip.id}-${id}-${index}`, trip, destination } : null;
+    }))
+    .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry))
+    .filter(({ trip, destination }) => `${trip.title} ${destination.name} ${(trip.cities ?? []).join(" ")}`.toLowerCase().includes(q.trim().toLowerCase()))
+    .sort((a, b) => (a.trip.start_date ?? "9999").localeCompare(b.trip.start_date ?? "")),
+  [trips, dests, q]);
 
   return (
     <>
-      <PageTitle title="Travel Timeline" intro="A living record of the journeys, places and experiences that have shaped my world — newest journeys first." />
+      <PageTitle title="Travel Timeline" intro="Every country and destination travelled, in the order the journeys happened." />
       <section className="container-page space-y-6 pb-12">
         <StatsGrid compact />
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="eyebrow">The journey so far</p>
-            <h2 className="mt-1 font-serif text-2xl">A life in journeys</h2>
+            <h2 className="mt-1 font-serif text-2xl">Countries travelled</h2>
           </div>
-          <SearchBox value={q} onChange={setQ} placeholder="Search trips or places…" className="w-full sm:max-w-xs" />
+          <SearchBox value={q} onChange={setQ} placeholder="Search countries or trips…" className="w-full sm:max-w-xs" />
         </div>
-
         {isLoading ? (
           <div className="rounded-xl border border-border bg-card p-6 text-sm text-muted-foreground">Loading your journey history…</div>
-        ) : timeline.length === 0 ? (
+        ) : entries.length === 0 ? (
           <div className="rounded-xl border border-border bg-card p-8 text-center">
             <Search className="mx-auto h-6 w-6 text-muted-foreground" />
-            <p className="mt-3 font-semibold">No journeys found</p>
-            <p className="mt-1 text-sm text-muted-foreground">Recorded trips will appear here, grouped by month and year. Add journeys with dates and destinations in the admin dashboard.</p>
+            <p className="mt-3 font-semibold">No recorded country journeys found</p>
+            <p className="mt-1 text-sm text-muted-foreground">Add trip dates and destinations in the admin dashboard to build the chronological timeline.</p>
           </div>
         ) : (
-          <div className="space-y-9">
-            {timeline.map(([period, entries]) => (
-              <section key={period} className="relative">
-                <div className="mb-4 flex items-center gap-3">
-                  <span className="h-px flex-1 bg-border" />
-                  <h3 className="shrink-0 text-xs font-bold uppercase tracking-[0.24em] text-primary">{period}</h3>
-                  <span className="h-px flex-1 bg-border" />
-                </div>
-                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                  {entries.map((trip) => {
-                    const places = trip.destination_ids.map((id) => dests.find((d) => d.id === id)).filter((d): d is (typeof dests)[number] => Boolean(d));
-                    const lead = places[0];
-                    const image = lead ? DESTINATION_IMAGES[lead.slug] : undefined;
-                    const placeNames = trip.cities.length ? trip.cities.join(" · ") : places.map((d) => d.name).join(" · ");
-                    return (
-                      <article key={trip.id} className="overflow-hidden rounded-lg border border-border bg-card transition-colors hover:border-primary/60">
-                        <div className="relative aspect-[16/9] bg-gradient-to-br from-secondary to-background">
-                          {image && <img src={image} alt={lead?.name ?? trip.title} loading="lazy" className="h-full w-full object-cover" />}
-                        </div>
-                        <div className="p-4">
-                          <p className="font-semibold">{trip.title}</p>
-                          <p className="mt-0.5 text-xs text-muted-foreground">{dateRange(trip.start_date, trip.end_date)}</p>
-                          <span className="mt-3 inline-block rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 text-[0.68rem] font-semibold text-primary">Visited</span>
-                          <div className="mt-3 flex flex-wrap items-center gap-2">
-                            {places.map((place) => (
-                              <span key={place.id} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/50 px-2 py-1 text-xs">
-                                <Flag iso2={place.iso2} slug={place.slug} emoji={place.flag} className="h-3.5 w-5 rounded-[2px]" />
-                                {place.name}
-                              </span>
-                            ))}
-                          </div>
-                          {placeNames && <p className="mt-3 text-sm text-muted-foreground">{placeNames}</p>}
-                          {trip.notes && <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-muted-foreground">{trip.notes}</p>}
-                        </div>
-                      </article>
-                    );
-                  })}
-                </div>
-              </section>
-            ))}
+          <div className="rounded-xl border border-border bg-card/80 p-5">
+            <ol className="relative space-y-5 border-l border-border pl-5">
+              {entries.map(({ key, trip, destination }) => {
+                const image = DESTINATION_IMAGES[destination.slug];
+                return (
+                  <li key={key} className="relative flex items-center gap-3">
+                    <span className="absolute -left-[1.6rem] top-2 h-2.5 w-2.5 rounded-full border-2 border-primary bg-background" />
+                    <span className="w-28 shrink-0 text-[0.65rem] uppercase leading-tight tracking-wide text-muted-foreground">{dateLabel(trip.start_date, trip.end_date)}</span>
+                    {image ? <img src={image} alt="" loading="lazy" className="h-10 w-14 shrink-0 rounded object-cover" /> : <span className="h-10 w-14 shrink-0 rounded bg-muted" />}
+                    <span className="min-w-0 flex-1">
+                      <span className="flex items-center gap-2 text-sm font-semibold">
+                        <Flag iso2={destination.iso2} slug={destination.slug} emoji={destination.flag} className="h-3.5 w-5 rounded-[2px]" />
+                        {destination.name}
+                      </span>
+                      <span className="mt-0.5 block text-[0.65rem] text-muted-foreground">{trip.title}{trip.cities?.length ? ` · ${trip.cities.join(" · ")}` : ""}</span>
+                    </span>
+                    <span className="shrink-0 rounded-full border border-primary/40 bg-primary/10 px-2.5 py-1 text-[0.65rem] font-semibold text-primary">Visited</span>
+                  </li>
+                );
+              })}
+            </ol>
           </div>
         )}
       </section>
