@@ -52,18 +52,9 @@ export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]
     { to: "/gallery", title: "Beyond the Map", sub: "Experiences, adventures & discoveries beyond borders", img: TILE_IMAGES.thinking },
   ] as const;
 
-  // Flight paths follow the published plan, starting from London.
+  // Public map shows destination markers only, never a travel route or transport sequence.
   const arcs: MapArc[] = [];
   const home = dests.find((d) => d.slug === "london") ?? null;
-  let prev = home && home.lat != null && home.lng != null ? home : null;
-  for (const p of ordered) {
-    const d = byId(p.destination_id);
-    if (!d || d.lat == null || d.lng == null) continue;
-    if (prev && prev.id !== d.id && prev.lat != null && prev.lng != null) {
-      arcs.push({ from: { lat: prev.lat, lng: prev.lng }, to: { lat: d.lat, lng: d.lng } });
-    }
-    prev = d;
-  }
 
   const pinTones = new Map<string, "visited" | "planned">();
   for (const p of ordered) {
