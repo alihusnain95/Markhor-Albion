@@ -54,6 +54,8 @@ function Passport() {
         { date: "2015-01-01", label: "2015", cities: ["Kraków", "Katowice"] },
       ] : destination.slug === "colombia" ? [
         { date: "2024-09-01", label: "September 2024", cities: ["Guatapé"] },
+      ] : destination.slug === "cyprus" ? [
+        { date: "2025-05-01", label: "May 2025", cities: ["Nicosia"] },
       ] : [];
       const historicalRows = historicalVisits
         .filter((visit) => !linkedTrips.some((trip) =>
