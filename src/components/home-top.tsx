@@ -194,22 +194,14 @@ export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]
           {ordered.length === 0 ? (
             <p className="mt-6 text-sm text-muted-foreground">No upcoming trips are published yet. Plans appear here once they're made public from the admin dashboard.</p>
           ) : (
-            <ol className="relative mt-5 space-y-4 border-l border-border pl-5">
+            <ol className="relative mt-5 space-y-3 border-l border-border pl-5">
               {upcomingCountries.slice(0, 7).map((item) => {
-                const img = item.destination ? DESTINATION_IMAGES[item.destination.slug] : null;
-                const monthYear = item.date ? new Date(item.date + "T00:00:00").toLocaleDateString("en-GB", { month: "long", year: "numeric" }).toUpperCase() : "DATE TBC";
+                const monthYear = item.date ? new Date(item.date + "T00:00:00").toLocaleDateString("en-GB", { month: "long", year: "numeric" }) : "Date to be confirmed";
                 return (
-                  <li key={item.label + monthYear} className="relative flex gap-3">
-                    <span className="absolute -left-[1.6rem] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-primary bg-background" />
-                    <span className="w-20 shrink-0 text-[0.65rem] uppercase leading-tight text-muted-foreground">{monthYear}</span>
-                    {img ? (
-                      <img src={img} alt="" loading="lazy" className="h-9 w-14 shrink-0 rounded object-cover" />
-                    ) : (
-                      <span className="flex h-9 w-14 shrink-0 items-center justify-center rounded bg-muted text-muted-foreground"><Images className="h-3.5 w-3.5" /></span>
-                    )}
-                    <span className="min-w-0 text-xs">
-                      <span className="block font-semibold">{item.label}</span>
-                    </span>
+                  <li key={item.label + monthYear} className="relative min-w-0 rounded-lg border border-border/70 bg-background/40 px-3 py-2.5">
+                    <span className="absolute -left-[1.6rem] top-4 h-2.5 w-2.5 rounded-full border-2 border-primary bg-background" />
+                    <span className="block truncate whitespace-nowrap text-sm font-semibold tracking-wide">{item.label}</span>
+                    <span className="mt-1 block text-[0.65rem] font-medium uppercase tracking-[0.16em] text-muted-foreground">{monthYear}</span>
                   </li>
                 );
               })}
