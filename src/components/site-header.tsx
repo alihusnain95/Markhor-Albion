@@ -16,6 +16,7 @@ export const NAV = [
   { to: "/passport", label: "Travel Timeline" },
   { to: "/gallery", label: "Beyond Travel" },
   { to: "/journal", label: "Articles" },
+  { to: "/podcasts", label: "Podcasts" },
   { to: "/next-adventure", label: "Next Adventure" },
   { to: "/wonders", label: "Wonders" },
   { to: "/unesco", label: "UNESCO" },
