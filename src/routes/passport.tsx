@@ -32,31 +32,59 @@ function Passport() {
   const { data: trips = [], isLoading: tripsLoading } = useQuery(tripsQuery);
   const [q, setQ] = useState("");
 
-  const entries = useMemo(() => dests
-    .filter((destination) => destination.status === "visited" && destination.type !== "other")
-    .map((destination) => {
-      const related = trips
-        .filter((trip) => trip.destination_ids.includes(destination.id) && trip.start_date)
-        .sort((a, b) => (a.start_date ?? "").localeCompare(b.start_date ?? ""));
-      const firstTrip = related[0];
-      const latestTrip = related[related.length - 1];
-      return {
+  const entries = useMemo(() => {
+    const visited = dests.filter((destination) => destination.status === "visited" && destination.type !== "other");
+    const rows = visited.flatMap((destination) => {
+      const linkedTrips = trips.filter((trip) => trip.destination_ids.includes(destination.id));
+      const tripRows = linkedTrips.map((trip) => ({
         destination,
-        firstDate: firstTrip?.start_date ?? null,
-        lastDate: latestTrip?.end_date ?? latestTrip?.start_date ?? null,
-        tripTitle: firstTrip?.title ?? null,
-        cities: destination.visit?.cities_explored ?? [],
+        firstDate: trip.start_date,
+        lastDate: trip.end_date ?? trip.start_date,
+        tripTitle: trip.title,
+        cities: trip.cities,
         image: DESTINATION_IMAGES[destination.slug],
-      };
-    })
-    .filter((entry) => `${entry.destination.name} ${entry.cities.join(" ")} ${entry.tripTitle ?? ""}`.toLowerCase().includes(q.trim().toLowerCase()))
-    .sort((a, b) => {
-      if (a.firstDate && b.firstDate) return b.firstDate.localeCompare(a.firstDate);
-      if (a.firstDate) return -1;
-      if (b.firstDate) return 1;
-      return a.destination.name.localeCompare(b.destination.name);
-    }),
-  [dests, trips, q]);
+        key: `${destination.id}-${trip.id}`,
+      }));
+      // Historical Poland visits supplied separately from the country-wide city list.
+      // Do not duplicate them if a matching dated trip is already recorded.
+      const polandVisits = destination.slug === "poland" ? [
+        { date: "2023-06-01", label: "June 2023", cities: ["Rzeszów"] },
+        { date: "2022-07-01", label: "July 2022", cities: ["Warsaw"] },
+        { date: "2022-05-01", label: "May 2022", cities: ["Warsaw"] },
+        { date: "2020-01-01", label: "2020", cities: ["Kraków", "Zakopane"] },
+        { date: "2015-01-01", label: "2015", cities: ["Kraków", "Katowice"] },
+      ] : [];
+      const historicalRows = polandVisits
+        .filter((visit) => !linkedTrips.some((trip) =>
+          trip.start_date?.slice(0, visit.label.length === 4 ? 4 : 7) === visit.date.slice(0, visit.label.length === 4 ? 4 : 7) &&
+          visit.cities.every((city) => trip.cities.some((tripCity) => tripCity.toLowerCase() === city.toLowerCase()))
+        ))
+        .map((visit) => ({
+          destination,
+          firstDate: visit.date,
+          lastDate: null,
+          tripTitle: null,
+          cities: visit.cities,
+          image: DESTINATION_IMAGES[destination.slug],
+          key: `${destination.id}-historical-${visit.date}`,
+          dateOverride: visit.label,
+        }));
+      if (destination.slug === "poland") return [...tripRows, ...historicalRows];
+      return tripRows.length ? tripRows : [{
+        destination, firstDate: null, lastDate: null, tripTitle: null,
+        cities: [] as string[], image: DESTINATION_IMAGES[destination.slug],
+        key: destination.id,
+      }];
+    });
+    return rows
+      .filter((entry) => `${entry.destination.name} ${entry.cities.join(" ")} ${entry.tripTitle ?? ""}`.toLowerCase().includes(q.trim().toLowerCase()))
+      .sort((a, b) => {
+        if (a.firstDate && b.firstDate) return b.firstDate.localeCompare(a.firstDate);
+        if (a.firstDate) return -1;
+        if (b.firstDate) return 1;
+        return a.destination.name.localeCompare(b.destination.name);
+      });
+  }, [dests, trips, q]);
 
   const isLoading = destinationsLoading || tripsLoading;
 
@@ -69,7 +97,7 @@ function Passport() {
           <div>
             <p className="eyebrow">The journey so far</p>
             <h2 className="mt-1 font-serif text-2xl">All countries travelled</h2>
-            <p className="mt-1 text-xs text-muted-foreground">{entries.length} visited destinations recorded</p>
+            <p className="mt-1 text-xs text-muted-foreground">{entries.length} travel entries recorded</p>
           </div>
           <SearchBox value={q} onChange={setQ} placeholder="Search countries or cities…" className="w-full sm:max-w-xs" />
         </div>
@@ -84,10 +112,10 @@ function Passport() {
         ) : (
           <div className="max-h-[72vh] overflow-y-auto overscroll-contain rounded-xl border border-border bg-card/80 p-4 pr-2 sm:p-5">
             <ol className="relative space-y-3 border-l border-border pl-4 sm:space-y-4 sm:pl-5">
-              {entries.map(({ destination, firstDate, lastDate, tripTitle, cities, image }) => (
-                <li key={destination.id} className="relative flex min-w-0 items-center gap-3 rounded-lg px-2 py-2.5 transition-colors hover:bg-muted/40 sm:gap-4 sm:px-3">
+              {entries.map(({ destination, firstDate, lastDate, tripTitle, cities, image, key, ...rest }) => (
+                <li key={key} className="relative flex min-w-0 items-center gap-3 rounded-lg px-2 py-2.5 transition-colors hover:bg-muted/40 sm:gap-4 sm:px-3">
                   <span className="absolute -left-[1.38rem] top-5 h-2.5 w-2.5 rounded-full border-2 border-primary bg-background sm:-left-[1.6rem]" />
-                  <span className="w-[5.25rem] shrink-0 text-[0.6rem] font-medium uppercase leading-tight tracking-wide text-muted-foreground sm:w-28 sm:text-[0.65rem]">{dateLabel(firstDate, lastDate)}</span>
+                  <span className="w-[5.25rem] shrink-0 text-[0.6rem] font-medium uppercase leading-tight tracking-wide text-muted-foreground sm:w-28 sm:text-[0.65rem]">{"dateOverride" in rest && rest.dateOverride ? rest.dateOverride.toUpperCase() : dateLabel(firstDate, lastDate)}</span>
                   {image ? <img src={image} alt="" loading="lazy" className="h-10 w-14 shrink-0 rounded-md object-cover sm:h-12 sm:w-16" /> : <span className="h-10 w-14 shrink-0 rounded-md bg-muted sm:h-12 sm:w-16" />}
                   <span className="min-w-0 flex-1">
                     <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
