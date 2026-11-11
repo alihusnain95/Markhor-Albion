@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 /** Every page on the site — used by the footer and the command palette. */
 export const NAV = [
@@ -157,6 +158,16 @@ export function SiteHeader() {
               {n.label}
             </Link>
           ))}
+          <DropdownMenu>
+            <DropdownMenuTrigger className={linkCls(isActive("/gallery", false) || isActive("/journal", false) || isActive("/podcasts", false))}>
+              Beyond Travel
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="border-border bg-popover text-popover-foreground">
+              <DropdownMenuItem asChild><Link to="/gallery">Explore Beyond Travel</Link></DropdownMenuItem>
+              <DropdownMenuItem asChild><Link to="/journal">Articles</Link></DropdownMenuItem>
+              <DropdownMenuItem asChild><Link to="/podcasts">Podcasts</Link></DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Link to="/about" className={linkCls(isActive("/about", false))}>About</Link>
         </nav>
 
@@ -196,7 +207,7 @@ export function SiteHeader() {
             </button>
           </div>
           <nav aria-label="Mobile" className="flex flex-col px-6 py-4">
-            {NAV.map((n) => (
+            {NAV.filter((n) => !["/journal", "/podcasts"].includes(n.to)).map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
