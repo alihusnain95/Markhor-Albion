@@ -4,7 +4,7 @@ import { useState } from "react";
 import { WorldMap, type MapArc, type MapPin } from "@/components/world-map";
 import { useTravelStats } from "@/components/atlas";
 import { DESTINATION_IMAGES, DESTINATION_TAGLINES, HOME_HERO_IMAGE, TILE_IMAGES } from "@/lib/images";
-import type { DestinationWithVisit, PlannedTrip } from "@/lib/queries";
+import type { DestinationWithVisit, PublicPlannedTrip } from "@/lib/queries";
 
 /** The owner's curated front-page row — planned and visited places, not a claim about which have been seen. */
 const FEATURED = ["hong-kong", "macau", "shanghai", "kartarpur", "faisalabad", "saudi-arabia", "beijing", "london"];
@@ -35,7 +35,7 @@ function Panel({ className = "", children }: { className?: string; children: Rea
   return <div className={`rounded-xl border border-border bg-card/80 backdrop-blur-md ${className}`}>{children}</div>;
 }
 
-export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]; plans: PlannedTrip[]; trips: Array<{ id: string; title: string; start_date: string | null; end_date: string | null; cities: string[] | null; destination_ids: string[]; notes: string | null }> }) {
+export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]; plans: PublicPlannedTrip[]; trips: Array<{ id: string; title: string; start_date: string | null; end_date: string | null; cities: string[] | null; destination_ids: string[]; notes: string | null }> }) {
   const { stats } = useTravelStats();
   const [q, setQ] = useState("");
   const byId = (id: string | null) => dests.find((d) => d.id === id) ?? null;
@@ -94,7 +94,7 @@ export function HomeTop({ dests, plans, trips }: { dests: DestinationWithVisit[]
               <Plane className="h-4 w-4 -rotate-45 text-primary" />
               <span className="text-left leading-tight">
                 <span className="block text-[0.55rem] uppercase tracking-[0.3em] text-muted-foreground">Next destination</span>
-                <span className="block text-xs font-bold uppercase tracking-[0.18em]">{nextDest?.name ?? next.title}</span>
+                <span className="block text-xs font-bold uppercase tracking-[0.18em]">{nextDest?.name ?? "Upcoming destination"}</span>
                 <span className="block text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground">{fmtDate(next.intended_start)}</span>
               </span>
             </Link>
