@@ -70,6 +70,8 @@ function Passport() {
         { date: "2016-04-01", label: "April 2016", cities: [] },
       ] : destination.slug === "finland" ? [
         { date: "2025-02-01", label: "February 2025", cities: ["Helsinki"] },
+      ] : destination.slug === "norway" ? [
+        { date: "2019-04-01", label: "April 2019", cities: [] },
       ] : [];
       const historicalRows = historicalVisits
         .filter((visit) => !linkedTrips.some((trip) =>
