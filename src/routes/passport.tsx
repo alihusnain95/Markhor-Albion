@@ -60,6 +60,8 @@ function Passport() {
         { date: "2026-04-01", label: "April 2026", cities: ["Kyiv", "Lviv", "Rivne"] },
       ] : destination.slug === "belarus" ? [
         { date: "2025-09-01", label: "September 2025", cities: ["Minsk"] },
+      ] : destination.slug === "lithuania" ? [
+        { date: "2025-09-01", label: "September 2025", cities: ["Vilnius"] },
       ] : [];
       const historicalRows = historicalVisits
         .filter((visit) => !linkedTrips.some((trip) =>
