@@ -60,7 +60,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Markhor Albion — Beyond Borders. Beyond the Ordinary." },
-      { name: "description", content: "A personal travel atlas, passport and journal by Markhor Albion." },
+      { name: "description", content: "Explore travel stories, destination guides, an interactive world map and a personal travel passport. Markhor Albion documents journeys, cultures, architecture and extraordinary places around the world." },
+      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
+      { property: "og:site_name", content: "Markhor Albion" },
+      { property: "og:locale", content: "en_GB" },
+      { name: "twitter:site", content: "@alihusnain95" },
       { name: "theme-color", content: "#07111F" },
     ],
     links: [
