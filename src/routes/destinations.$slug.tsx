@@ -9,6 +9,8 @@ import { DESTINATION_IMAGES, DESTINATION_TAGLINES, PAKISTAN_IMAGES, UNESCO_IMAGE
 import { PERSONAL_PHOTOS } from "@/lib/personal-photos";
 import { LANDMARK_CREDITS } from "@/lib/landmark-images";
 
+const SITE_URL = "https://markhor-albion.alihusnain95.workers.dev";
+
 function titleFromSlug(slug: string) {
   return slug.split("-").map((w) => (w[0]?.toUpperCase() ?? "") + w.slice(1)).join(" ");
 }
@@ -16,15 +18,22 @@ function titleFromSlug(slug: string) {
 export const Route = createFileRoute("/destinations/$slug")({
   head: ({ params }) => {
     const name = titleFromSlug(params.slug);
+    const description = `Explore ${name} through Markhor Albion: destination information, places visited, cities, attractions, UNESCO sites, travel photographs and personal experiences.`;
+    const url = `${SITE_URL}/destinations/${params.slug}`;
     return {
       meta: [
-        { title: `${name} — Destination | Markhor Albion` },
-        { name: "description", content: `${name}: visit record, cities explored, attractions and journal entries from Markhor Albion.` },
-        { property: "og:title", content: `${name} | Markhor Albion` },
-        { property: "og:description", content: `Personal travel record and guide for ${name}.` },
+        { title: `${name} Travel Guide & Visit Record | Markhor Albion` },
+        { name: "description", content: description },
+        { name: "robots", content: "index, follow, max-image-preview:large" },
+        { property: "og:title", content: `${name} Travel Guide | Markhor Albion` },
+        { property: "og:description", content: description },
+        { property: "og:url", content: url },
         { property: "og:type", content: "article" },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: `${name} Travel Guide | Markhor Albion` },
+        { name: "twitter:description", content: description },
       ],
+      links: [{ rel: "canonical", href: url }],
     };
   },
   component: DestinationPage,
