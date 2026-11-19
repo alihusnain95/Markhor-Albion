@@ -6,17 +6,29 @@ import { ArticleBody } from "@/components/article-body";
 import { articleQuery, articlesQuery, destinationsQuery } from "@/lib/queries";
 import { readingTime } from "@/lib/stats";
 
+const SITE_URL = "https://markhor-albion.alihusnain95.workers.dev";
+
 export const Route = createFileRoute("/journal/$slug")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `${params.slug.replace(/-/g, " ")} — The Journal | Markhor Albion` },
-      { name: "description", content: "A travel story from The Journal by Markhor Albion." },
-      { property: "og:title", content: "The Journal | Markhor Albion" },
-      { property: "og:description", content: "A travel story from Markhor Albion." },
-      { property: "og:type", content: "article" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: ({ params }) => {
+    const title = params.slug.split("-").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+    const description = `${title}: a travel story, destination experience and field notes from The Journal by Markhor Albion.`;
+    const url = `${SITE_URL}/journal/${params.slug}`;
+    return {
+      meta: [
+        { title: `${title} | Markhor Albion Journal` },
+        { name: "description", content: description },
+        { name: "robots", content: "index, follow, max-image-preview:large" },
+        { property: "og:title", content: `${title} | Markhor Albion Journal` },
+        { property: "og:description", content: description },
+        { property: "og:url", content: url },
+        { property: "og:type", content: "article" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: `${title} | Markhor Albion Journal` },
+        { name: "twitter:description", content: description },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
   component: ArticlePage,
 });
 
@@ -48,7 +60,7 @@ function ArticlePage() {
           {a.city && ` · ${a.city}`}
         </p>
       </header>
-      {a.cover_url && <img src={a.cover_url} alt="" className="mx-auto max-h-[70vh] w-full max-w-6xl object-cover" />}
+      {a.cover_url && <img src={a.cover_url} alt={a.title} className="mx-auto max-h-[70vh] w-full max-w-6xl object-cover" />}
       <div className="container-page max-w-3xl py-14">
         <ArticleBody body={a.body ?? ""} />
         <div className="mt-12 flex flex-wrap gap-2 border-t border-border pt-6">
