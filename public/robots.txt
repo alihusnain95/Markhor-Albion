@@ -16,4 +16,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://markhor-albion.lovable.app/sitemap.xml
+Sitemap: https://markhor-albion.alihusnain95.workers.dev/sitemap.xml
