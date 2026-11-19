@@ -64,7 +64,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
       { property: "og:site_name", content: "Markhor Albion" },
       { property: "og:locale", content: "en_GB" },
-      { name: "twitter:site", content: "@alihusnain95" },
       { name: "theme-color", content: "#07111F" },
     ],
     links: [
